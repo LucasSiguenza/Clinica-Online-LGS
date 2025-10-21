@@ -1,0 +1,86 @@
+<form [formGroup]="ingresoForm" autocomplete='off' class='form'>
+    
+  <div class='control'>
+    <h1>
+      Ingreso
+    </h1>
+  </div>
+  <div class='control block-cube block-input'>
+    <input type="email" formControlName="email" placeholder="Ingres su email">
+    @if(ingresoForm.get('email')?.invalid && ingresoForm.get('nombre')?.touched){
+      <div>
+        Nombre de usuario requerido.
+      </div>
+      }
+    <div class='bg-top'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg-right'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg'>
+      <div class='bg-inner'></div>
+    </div>
+  </div>
+
+  <div class='control block-cube block-input'>
+    <input  type="password" formControlName="contraseña" placeholder="Contraseña">
+    <div class='bg-top'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg-right'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg'>
+      <div class='bg-inner'></div>
+    </div>
+  </div>
+
+  <button class='btn block-cube block-cube-hover' (click)="ingresar()" type='button'>
+    <div class='bg-top'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg-right'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='text'>
+      Ingresar
+    </div>
+  </button>
+
+  <button class='btn block-cube block-cube-hover' (click)="registrarse()" type='button'>
+    <div class='bg-top'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg-right'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='bg'>
+      <div class='bg-inner'></div>
+    </div>
+    <div class='text'>
+      Registrarse
+    </div>
+  </button>
+  
+</form>
+<div class="d-flex justify-content-center gap-3 mt-3">
+    <button class="ui-btn" (click)="botonTesteo1()">
+        <span>
+            ✅
+        </span>
+        </button >
+    <button class="ui-btn" (click)="botonTesteoAnim()">
+        <span>
+            ✅
+        </span>
+        </button>
+    <button class="ui-btn" (click)="botonTesteo2()">
+        <span>
+            ✅
+        </span>
+    </button>
+</div>
