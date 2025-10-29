@@ -1,91 +1,107 @@
 <form autocomplete='off' [formGroup]="registroForm"  class='form'>
-
+  
   <div class='control'>
     <h1>
       Registro
     </h1>
   </div>
-  <div class='control block-cube block-input'>
-    <input type="text" formControlName="nombre" placeholder="Nombre de usuario">
-    @if(registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched){
-      <div>
-        Nombre de usuario requerido.
-      </div>
-    }
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
+  
+  <div class="row">
+    <!--//^ =========== DNI ===========-->
+    <div class="col">
+      <app-input-personalizado 
+      [form]="registroForm" 
+      control="dni"
+      tipoInput="number"
+      placeHolder="DNI">
+    </app-input-personalizado>
   </div>
-  <div class='control block-cube block-input'>
-
-    <input type="email" formControlName="email" placeholder="Correo electrónico.">
-    @if(registroForm.get('email')?.errors?.['email'] && registroForm.get('email')?.touched){
-       <div>
-        Su correo es requerido.
-      </div>
-    }
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
+  <!--//^ =========== CUIL ===========-->
+    <div class="col ">
+      <app-input-personalizado 
+      [form]="registroForm" 
+      control="cuil"
+      tipoInput="number"
+      placeHolder="CUIL">
+    </app-input-personalizado>
   </div>
+</div>
 
-  <div class='control block-cube block-input'>
-    <input type="password" formControlName="contraseña" placeholder="Contraseña">
-    @if(registroForm.get('contraseña')?.errors?.['minlength'] && registroForm.get('contraseña')?.touched){
-      <div>
-        La contraseña es requerida y, al menos, debe tener 6 caracteres.
+  <!--//^ =========== Nombre ===========-->
+  <app-input-personalizado 
+    [form]="registroForm" 
+    control="nombre"
+    tipoInput="text"
+    placeHolder="Ingrese su nombre">
+  </app-input-personalizado>
+
+  <!--//^ =========== Apellido ===========-->
+  <app-input-personalizado 
+    [form]="registroForm" 
+    control="apellido"
+    tipoInput="text"
+    placeHolder="Ingrese su apellido">
+  </app-input-personalizado>
+
+  <!--//^ =========== Edad ===========-->    
+  <app-input-personalizado 
+  [form]="registroForm" 
+  control="edad"
+    tipoInput="number"
+    placeHolder="Edad">
+  </app-input-personalizado> 
+  
+  <!--//^ =========== Obra social ===========-->
+    <app-accordion-personalizado 
+    #accordion
+    title="O.Social: {{this.registroForm.controls.obraSocial.value}}">
+    <div class="d-grid gap-3 ">
+      <button (click)="seleccionarObSocial('OSDE'); accordion.toggle() ">Obra cara</button>
+      <button (click)="seleccionarObSocial('OSPIT');accordion.toggle()">Obra económica</button>
+      <button (click)="seleccionarObSocial('OSECAC');accordion.toggle()">Obra barata</button>
       </div>
-    }
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
-  </div>
-  <button class='btn block-cube block-cube-hover' (click)="registro()" [disabled]="registroForm.invalid" type='button'>
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='text'>
-      Registro
-    </div>
-  </button>
+    </app-accordion-personalizado>
+    
+  <!--//^ =========== Email ===========-->
+  <app-input-personalizado 
+  [form]="registroForm" 
+  control="email"
+  tipoInput="email"
+  placeHolder="Ingrese su correo"></app-input-personalizado>
+  <!--//^ =========== Contraseña ===========-->
+  <app-input-personalizado 
+  [form]="registroForm" 
+  control="contrasenia"
+  tipoInput="password"
+  placeHolder="Ingrese su contraseña"></app-input-personalizado>
+  
+  <!--//^ =========== Fotos ===========-->
+  <div class="d-flex justify-content-around">
+      <div class="card col">
+        <img class="card__content" [src]="fotoPreviewUno ?? placeHolder">
+      <button class="button" (click)="elegirImagen('1')">
+          <span>Elegir foto</span>
+        </button>
+      </div>
 
-<button class='btn block-cube block-cube-hover' type='button'>
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='text'>
-      Volver al login.
-    </div>
-</button>
+      <div class="card col">
+        <img class="card__content" [src]="fotoPreviewDos ?? placeHolder">
+      <button class="button" (click)="elegirImagen('2')">
+          <span>Elegir foto</span>
+        </button>
+      </div>
+</div>
 
+  
+
+  <!--//! =========== Botones ===========-->
+    <div class="d-grid gap-3">
+      <app-boton-personalizado
+      texto="Volver al login."
+      (click)="volverAlLogin()"></app-boton-personalizado>
+      <app-boton-personalizado
+      texto="Registrar."
+      (click)="registro()"></app-boton-personalizado>
+    </div>
+    
 </form>

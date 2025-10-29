@@ -5,67 +5,28 @@
       Ingreso
     </h1>
   </div>
-  <div class='control block-cube block-input'>
-    <input type="email" formControlName="email" placeholder="Ingres su email">
-    @if(ingresoForm.get('email')?.invalid && ingresoForm.get('nombre')?.touched){
-      <div>
-        Nombre de usuario requerido.
-      </div>
-      }
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
+
+  <app-input-personalizado 
+    [form]="ingresoForm" 
+    control="email"
+    tipoInput="email"
+    placeHolder="Ingrese su correo"></app-input-personalizado>
+
+<app-input-personalizado
+  [form]="ingresoForm"
+  control="constrasenia"
+  tipoInput="password"
+  placeHolder="Ingrese su contraseña"></app-input-personalizado>
+    
+  <div class="d-grid gap-3">
+    <app-boton-personalizado
+    (click)="ingresar()"
+    tipo="submit"
+    texto="Ingresar"></app-boton-personalizado>
+
+    <app-boton-personalizado
+      texto="Ir a registro" (click)="registrarse()"></app-boton-personalizado>
   </div>
-
-  <div class='control block-cube block-input'>
-    <input  type="password" formControlName="contraseña" placeholder="Contraseña">
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
-  </div>
-
-  <button class='btn block-cube block-cube-hover' (click)="ingresar()" type='button'>
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='text'>
-      Ingresar
-    </div>
-  </button>
-
-  <button class='btn block-cube block-cube-hover' (click)="registrarse()" type='button'>
-    <div class='bg-top'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg-right'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='bg'>
-      <div class='bg-inner'></div>
-    </div>
-    <div class='text'>
-      Registrarse
-    </div>
-  </button>
-  
 </form>
 <div class="d-flex justify-content-center gap-3 mt-3">
     <button class="ui-btn" (click)="botonTesteo1()">
@@ -84,3 +45,4 @@
         </span>
     </button>
 </div>
+  

@@ -1,0 +1,22 @@
+<div class="accordion-item block-cube block-cube-hover">
+  <!-- Botón que abre/cierra -->
+  <button class="btn accordion-header" (click)="toggle()">
+    <span class="text">{{ title }}</span>
+  </button>
+
+  <!-- Contenido desplegable -->
+  <div class="accordion-body" [class.open]="isOpen">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Capas decorativas estilo block-cube -->
+  <div class="bg-top">
+    <div class="bg-inner"></div>
+  </div>
+  <div class="bg-right">
+    <div class="bg-inner"></div>
+  </div>
+  <div class="bg">
+    <div class="bg-inner"></div>
+  </div>
+</div>

@@ -104,6 +104,6 @@ export class Home implements AfterViewInit {
   }
 
   cerrarSesion(){
-    this.utilSvc.routerLink('');
+    this.utilSvc.redirigir('');
   }
 }

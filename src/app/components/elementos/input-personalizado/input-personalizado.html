@@ -1,0 +1,23 @@
+<div class="control block-cube block-input" [formGroup]="form">
+  <input 
+    [type]="tipoInput"
+    [formControlName]="control"
+    [placeholder]="placeHolder"
+  >
+
+  @if (form.get(control)?.invalid && form.get(control)?.touched) {
+    <div class="validators small mt-1">
+      {{ control | titlecase }} requerido.
+    </div>
+  }
+
+  <div class="bg-top">
+    <div class="bg-inner"></div>
+  </div>
+  <div class="bg-right">
+    <div class="bg-inner"></div>
+  </div>
+  <div class="bg">
+    <div class="bg-inner"></div>
+  </div>
+</div>

@@ -28,7 +28,11 @@
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
+    "@supabase/supabase-js": "^2.76.1",
     "angular-toastify": "^2.0.0",
+    "base64-arraybuffer": "^1.0.2",
+    "ngx-ui-loader": "^19.0.0",
+    "platform-browser-dynamic": "^0.0.1-security",
     "rxjs": "~7.8.0",
     "toastify-js": "^1.12.0",
     "tslib": "^2.3.0"

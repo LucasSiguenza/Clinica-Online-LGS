@@ -1,7 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, ViewChild } from '@angular/core';
 import {} from '@angular/core'
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import Toastify from 'toastify-js'
 
 @Injectable({
@@ -10,26 +9,28 @@ import Toastify from 'toastify-js'
 export class Utils {
 
   
-  router = inject(Router)
-  
-  _loading = new BehaviorSubject<boolean>(false);
-  loading$ = this._loading.asObservable();  
+  private router = inject(Router)
+  cargando = signal(false);
 
-  // ================== Cargando ==================
-
-  mostrarLoading(){
-    this._loading.next(true);
+  //! ================== Cargando ==================
+  mostrarLoading() {
+    this.cargando.set(true);
   }
-  ocultarLoading(){
-    this._loading.next(false)
+
+  ocultarLoading() {
+    this.cargando.set(false);
   }
   
-  // ================== ToastyAlert ==================
+  //! ================== ToastyAlert ==================
 
 
-  mostrarToast(mensaje: string, type: 'success' | 'error' | 'info' = 'info') {
+  mostrarToast(mensaje: string,
+    tipo: 'success' | 'error' | 'info' = 'info',
+    posicion: 'center'| 'left' | 'right' = 'right',
+    duracion: number = 1000,
+  ) {
     let background = '';
-    switch (type) {
+    switch (tipo) {
       case 'success':
         background = 'linear-gradient(to right, #00b09b, #96c93d)';
         break;
@@ -43,16 +44,67 @@ export class Utils {
 
     return Toastify({
       text: mensaje,
-      duration: 2500,
+      duration: duracion,
       gravity: "top",
-      position: "right",
+      position: posicion,
       backgroundColor: background,
-      close: true
+      close: false
     }).showToast();
   }
-  // ================== Enrutamiento ==================
+  //! ================== Imagenes ==================
+  
+    /**
+   * Abre un selector de archivos y devuelve el archivo seleccionado como base64.
+   * @param accept Tipos de archivo permitidos, por ejemplo "image/*" o ".jpg,.png"
+   * @returns Promise<string | null> base64 completo (con prefijo "data:[tipo];base64,") o null si se cancela
+   */
+  seleccionarArchivo(accept: string = '*'): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = accept;
 
-  routerLink(url: string) {
+      input.onchange = async () => {
+        const file = input.files && input.files.length > 0 ? input.files[0] : null;
+        if (!file) {
+          resolve(null); // usuario canceló
+          return;
+        }
+
+        try {
+          const base64 = await this.convertirArchivoABase64(file);
+          resolve(base64);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      input.click();
+    });
+  }
+
+  /**
+   * Convierte un archivo (File) a su representación base64 completa (con prefijo data:[tipo];base64,)
+   * @param file Archivo a convertir
+   * @returns Promise<string> cadena base64 completa
+   */
+  private convertirArchivoABase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const result = reader.result as string; // ya incluye "data:[tipo];base64,"
+        resolve(result);
+      };
+
+      reader.onerror = (error) => reject(error);
+
+      reader.readAsDataURL(file);
+    });
+  }
+  //! ================== Enrutamiento ==================
+
+  redirigir(url: string) {
     return this.router.navigateByUrl(url);
   }
 
