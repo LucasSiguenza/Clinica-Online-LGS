@@ -97,6 +97,7 @@ export class UserSupabase {
         nombre: u.nombre,
         apellido: u.apellido,
         edad: u.edad,
+        cuil: u.cuil,
         dni: u.dni,
         correo: u.correo,
         perfil: u.perfil,
@@ -158,20 +159,23 @@ export class UserSupabase {
       return;
     }
 
-    this.auth.registrarUsuarioAuth(usr, contrasenia);
-
+    const uid = await this.auth.registrarUsuarioAuth(usr, contrasenia);
+    usr.uid = uid;
     const {data, error} = await this.supabase
       .from('usuarios')
       .insert({
+        uid: uid,
         obra_social: usr.obra_social ?? 'no',
         especialidad: usr.especialidad ?? 'no',
         nombre: usr.nombre ,
         apellido: usr.apellido,
         edad: usr.edad,
         dni: usr.dni,
+        cuil: usr.cuil,
         correo: usr.correo,
         perfil: usr.perfil
       })
+      .single();
     if(error) throw new Error('Algo salió mal:', {cause: error.message});
 
     if(typeof usr.foto === 'string' ){
@@ -209,8 +213,7 @@ export class UserSupabase {
     
     if(typeof foto === 'string'){
       if(!foto.startsWith('data:')) throw new Error('Foto inválida.');
-      const imagen = decode(foto);
-      const archivo = new Blob([imagen], { type: 'image/png' });
+      var archivo = this.utilSvc.formatearBase64AImagen(foto); 
       
       const rutaArchivo = `${usr.uid}.png`;
   
@@ -229,14 +232,11 @@ export class UserSupabase {
     } else {
 
       const arrayFotos = foto.map(f =>{ 
-        if(!f.startsWith('data:')) throw new Error('Foto inválida.');
-        return decode(f)
+        return this.utilSvc.formatearBase64AImagen(f)
       }) // decodifica todas las fotos
 
-      const urls = await Promise.all(arrayFotos.map(async (imagen:ArrayBuffer, i:number) => {
+      const urls = await Promise.all(arrayFotos.map(async (archivo, i:number) => {
         const rutaArchivo = `${usr.uid}${i}.png`; 
-
-        const archivo = new Blob([imagen], { type: 'image/png' });
 
         const { error } = await this.supabase.storage
           .from('foto-usuario')
@@ -271,11 +271,11 @@ export class UserSupabase {
       const { data: uno } = this.supabase
         .storage
         .from('foto-usuario')
-        .getPublicUrl(`${usr.uid}1.png`)
+        .getPublicUrl(`${usr.uid}0.png`)
       const { data: dos } = this.supabase
       .storage
       .from('foto-usuario')
-      .getPublicUrl(`${usr.uid}2.png`)
+      .getPublicUrl(`${usr.uid}1.png`)
 
       return [uno.publicUrl+`?v=${timestamp}`, dos.publicUrl+`?v=${timestamp}`];
 

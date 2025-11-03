@@ -65,7 +65,7 @@
   <!--//^ =========== Email ===========-->
   <app-input-personalizado 
   [form]="registroForm" 
-  control="email"
+  control="correo"
   tipoInput="email"
   placeHolder="Ingrese su correo"></app-input-personalizado>
   <!--//^ =========== Contraseña ===========-->
@@ -76,21 +76,21 @@
   placeHolder="Ingrese su contraseña"></app-input-personalizado>
   
   <!--//^ =========== Fotos ===========-->
-  <div class="d-flex justify-content-around">
+  <div class="d-flex gap-3">
       <div class="card col">
-        <img class="card__content" [src]="fotoPreviewUno ?? placeHolder">
+        <img class="card__content" [src]="fotoPreviewUno()">
       <button class="button" (click)="elegirImagen('1')">
           <span>Elegir foto</span>
         </button>
       </div>
 
       <div class="card col">
-        <img class="card__content" [src]="fotoPreviewDos ?? placeHolder">
+        <img class="card__content" [src]="fotoPreviewDos()">
       <button class="button" (click)="elegirImagen('2')">
           <span>Elegir foto</span>
         </button>
       </div>
-</div>
+</div><br>
 
   
 

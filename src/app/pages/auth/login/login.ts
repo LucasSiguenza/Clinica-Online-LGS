@@ -34,9 +34,12 @@ export class Login {
       await this.authSvc.iniciarSesion(correo as string, contrasenia as string);
       this.utilSvc.mostrarToast('Ingreso exitoso', 'success','center')
       this.utilSvc.redirigir('/home')
+      this.utilSvc.ocultarLoading();
+
     }catch(e) {
       this.utilSvc.mostrarToast('Algo salió mal', 'error','center');
       console.error(e)
+      this.utilSvc.ocultarLoading();
       return
     } finally{
       this.utilSvc.ocultarLoading();

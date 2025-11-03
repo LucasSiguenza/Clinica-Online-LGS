@@ -22,8 +22,7 @@ export class AuthSupabase{
     this.supabase.auth.getSession()
     
   }
-  //!==================== . ====================
-  //!==================== . ====================
+
   //!==================== Métodos de autenticación ====================
 
 
@@ -34,18 +33,23 @@ export class AuthSupabase{
   async registrarUsuarioAuth(usr: Usuario, contrasenia: string){
     const correo = usr.correo;
 
-    const { data: correoDB} = await this.supabase
-      .from('usuarios')
-      .select('*')
-      .eq('correo', correo)
-      .single()
+    console.log("Correo: ",correo, " \nContraseña: ",contrasenia);
 
     const {data, error} = await this.supabase.auth.signUp({
       email: correo,
       password: contrasenia,
     });
-    if(error) throw new Error('Algo salió mal al registrar',{cause:error.message});
+
+    if(error) throw new Error('Algo salió mal al registrar. ',{cause:error.message});
+    return data.user?.id;
     
+  }
+
+  async cerrarSesion(){
+    if(this.supabase.auth.getSession() == null) throw new Error('No hay sesión que cerrar'); 
+
+    this.supabase.auth.signOut({scope: 'global'});
+    console.log('sesión cerrada.')
   }
 
   async iniciarSesion(correo: string, contrasenia: string){

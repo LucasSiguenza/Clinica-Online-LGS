@@ -1,46 +1,43 @@
-<div class="position-absolute top-0 end-0 m-3">
-  <button type="button" class="btn btn-pink-moon btn-rounded" (click)="cerrarSesion()">
-    Cerrar sesión
+<app-header></app-header>
+<div id="myCarousel" class="carousel slide vh-100" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+
+  <div class="carousel-inner vh-100">
+    <div class="carousel-item active bg bg1">
+      <div class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
+        <h1>Atención personalizada.</h1>
+        <p>Cada especialista se encarga de resolver todas y cada una de sus inquietudes.</p>
+        <a class="btn btn-lg btn-primary mt-2" href="#" role="button">¡Agendar turnos!</a>
+      </div>
+    </div>
+
+    <div class="carousel-item bg bg2">
+      <div class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
+        <h1>Encuestas transparentes</h1>
+        <p>Permitimos que cada usuario tenga la oportunidad de expresarse y dar a conocer su experiencia con nosotros.</p>
+        <a class="btn btn-lg btn-primary mt-2" href="#" role="button">Ver encuestas.</a>
+      </div>
+    </div>
+
+    <div class="carousel-item bg bg3">
+      <div class="container h-100 d-flex flex-column justify-content-center align-items-center text-center">
+        <h1>REVIVAN A ROCA 🗣🗣🗣🗣</h1>
+        <p>CREEMOS FERVIENTEMENTE QUE HAY QUE REVIVIR A JULIO ARGENTINO ROCA 🔥</p>
+        <a class="btn btn-lg btn-primary mt-2" href="#" role="button">BOTÓN PARA REVIVIR A ROCA</a>
+      </div>
+    </div>
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
   </button>
 </div>
-<main class="container">
- 
-  <h3 class="page-title">¡Bienvenido a la clínica LGS!</h3>
-
-   <section #slideshow class="slideshow">
-    <div class="slide">
-     <h1 class="slide-title">Turnos</h1>
-    </div>
-   <div class="slide">
-     <h1 class="slide-title">Conferencias</h1>
-    </div>
-   <div class="slide">
-     <h1 class="slide-title">Atención rápida</h1>
-    </div>
-   <div class="slide">
-     <h1 class="slide-title">Comunicación</h1>
-    </div>
-   <div class="slide">
-     <h1 class="slide-title">REVIVAN A ROCA 🗣</h1>
-    </div>
-  </section>
-
-  <section #bars class="bars">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-  </section>
-
-  <ul #dots class="nav-dots">
-    <li class="dot"><button type="button"></button></li>
-    <li class="dot"><button type="button"></button></li>
-    <li class="dot"><button type="button"></button></li>
-    <li class="dot"><button type="button"></button></li>
-    <li class="dot"><button type="button"></button></li>
-  </ul>
-</main>
