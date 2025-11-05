@@ -1,4 +1,4 @@
-import { inject, Injectable, OnInit } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import {createClient, SupabaseClient} from '@supabase/supabase-js'
 import { env } from '../../enviroments/enviroment';
 import { Usuario } from '../models/Usuario';
@@ -9,6 +9,8 @@ import { Usuario } from '../models/Usuario';
 export class AuthSupabase{
   //? Instanciar Variables y servicios
   private supabase: SupabaseClient;
+  usuarioActual = signal<Usuario | null>(null);
+
   
   constructor(){
     this.supabase = createClient(env.supabaseURL, env.supabaseKey,{
@@ -58,6 +60,16 @@ export class AuthSupabase{
       password: contrasenia
     })
     if(error) throw new Error('Algo salió mal al iniciar sesión ',{ cause:error.message });
+
+    const {data: usuarioDB, error: eDB} = await this.supabase
+      .from('usuarios')
+      .select('*')
+      .eq('uid', data.user.id)
+      .single()
+
+    if(eDB) throw new Error(`Fallo al obtener el usuario en la base de datos: ${eDB.cause}`, {cause: eDB.message});
+
+    this.usuarioActual.set(usuarioDB as Usuario);
 
   }
 

@@ -1,0 +1,173 @@
+<div class="container-fluid d-flex justify-content-center">
+  <form class="d-flex align-items-center flex-column p-4 w-75" [formGroup]="form">
+    <div class="row g-3 w-100">
+
+      <!-- Nombre -->
+      <div class="col-md-6">
+        <label for="nombre" class="form-label text-light">Nombre</label>
+        <input id="nombre" type="text" formControlName="nombre"
+          class="form-control bg-dark text-light border-0 w-100 input-uniforme"
+          [class.is-invalid]="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+        @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+          <div class="text-danger small">El nombre es obligatorio.</div>
+        }
+        @if (form.get('nombre')?.hasError('minlength') && form.get('nombre')?.touched) {
+          <div class="text-warning small">Debe tener al menos 3 caracteres.</div>
+        }
+      </div>
+
+      <!-- Apellido -->
+      <div class="col-md-6">
+        <label for="apellido" class="form-label text-light">Apellido</label>
+        <input id="apellido" type="text" formControlName="apellido"
+          class="form-control bg-dark text-light border-0 w-100 input-uniforme"
+          [class.is-invalid]="form.get('apellido')?.invalid && form.get('apellido')?.touched">
+        @if (form.get('apellido')?.hasError('required') && form.get('apellido')?.touched) {
+          <div class="text-danger small">El apellido es obligatorio.</div>
+        }
+        @if (form.get('apellido')?.hasError('minlength') && form.get('apellido')?.touched) {
+          <div class="text-warning small">Debe tener al menos 3 caracteres.</div>
+        }
+      </div>
+
+      <!-- Edad -->
+      <div class="col-md-4">
+        <label for="edad" class="form-label text-light">Edad</label>
+        <input id="edad" type="number" formControlName="edad"
+          class="form-control bg-dark text-light border-0 w-100 input-uniforme"
+          [class.is-invalid]="form.get('edad')?.invalid && form.get('edad')?.touched">
+        @if (form.get('edad')?.hasError('min') && form.get('edad')?.touched) {
+          <div class="text-warning small">Debes tener al menos 13 años.</div>
+        }
+      </div>
+
+      <!-- DNI -->
+      <div class="col-md-4 position-relative">
+        <label for="dni" class="form-label text-light">DNI</label>
+        <input id="dni" type="text" maxlength="8" formControlName="dni"
+          class="form-control bg-dark text-light border-0 pe-5 w-100 input-uniforme"
+          [class.is-invalid]="form.get('dni')?.invalid && form.get('dni')?.touched">
+        <span class="position-absolute top-50 end-0 translate-middle-y text-secondary me-3 small">
+          {{ form.get('dni')?.value?.length || 0 }}/8
+        </span>
+      </div>
+
+      <!-- CUIL -->
+      <div class="col-md-4 position-relative">
+        <label for="cuil" class="form-label text-light">CUIL</label>
+        <input id="cuil" type="text" maxlength="11" formControlName="cuil"
+          class="form-control bg-dark text-light border-0 pe-5 w-100 input-uniforme"
+          [class.is-invalid]="form.get('cuil')?.invalid && form.get('cuil')?.touched">
+        <span class="position-absolute top-50 end-0 translate-middle-y text-secondary me-3 small">
+          {{ form.get('cuil')?.value?.length || 0 }}/11
+        </span>
+      </div>
+
+      <!-- Correo -->
+      <div class="col-md-6">
+        <label for="correo" class="form-label text-light">Correo</label>
+        <input id="correo" type="email" formControlName="correo"
+          class="form-control bg-dark text-light border-0 w-100 input-uniforme"
+          [class.is-invalid]="form.get('correo')?.invalid && form.get('correo')?.touched">
+      </div>
+      @if(this.isNuevo){
+        <!-- Contraseña -->
+        <div class="col-md-6">
+          <label for="contrasenia" class="form-label text-light">Contraseña</label>
+          <input id="contrasenia" type="password" formControlName="contrasenia"
+            class="form-control bg-dark text-light border-0 w-100 input-uniforme"
+            [class.is-invalid]="form.get('contrasenia')?.invalid && form.get('contrasenia')?.touched">
+        </div>
+      }
+
+      <!-- Perfíl -->
+       @if(this.authSvc.usuarioActual()?.perfil === 'admin'){
+         <div class="col-12">
+           <app-accordion-personalizado 
+             #accordion
+             title="Perfil: {{ form.controls.perfil.value }}">
+             <div class="d-grid gap-2 p-2">
+               <button (click)="seleccionarPerfil('cliente'); accordion.toggle()">Cliente</button>
+               <button (click)="seleccionarPerfil('empleado'); accordion.toggle()">Empleado</button>
+               <button (click)="seleccionarPerfil('admin'); accordion.toggle()">Administrador</button>
+             </div>
+           </app-accordion-personalizado>
+         </div>
+       }
+
+      <!-- Obra social if cliente -->
+
+      @if(perfil() == 'cliente'){
+        <div class="col-12">
+          <app-accordion-personalizado 
+            #accordion
+            title="O.Social: {{ form.controls.obraSocial.value }}">
+            <div class="d-grid gap-2 p-2">
+              <button (click)="seleccionarObSocial('no'); accordion.toggle()">No seleccionada</button>
+              <button (click)="seleccionarObSocial('OSDE'); accordion.toggle()">OSDE</button>
+              <button (click)="seleccionarObSocial('OSPIT'); accordion.toggle()">OSPIT</button>
+              <button (click)="seleccionarObSocial('OSECAC'); accordion.toggle()">OSECAC</button>
+            </div>
+          </app-accordion-personalizado>
+        </div>
+      }
+
+      <!-- Especialidad if empleado -->
+
+      @if(perfil() == 'empleado'){
+        <div class="col-12">
+          <app-accordion-personalizado 
+            #accordion
+            title="Especialidad: {{ form.controls.especialidad.value }}">
+            <div class="d-grid gap-2 p-2">
+              <button (click)="seleccionarEspecialidad('no'); accordion.toggle()">No seleccionada</button>
+              <button (click)="seleccionarEspecialidad('clinico'); accordion.toggle()">Clínico</button>
+              <button (click)="seleccionarEspecialidad('dentista'); accordion.toggle()">Dentista</button>
+              <!-- Input + botón guardar -->
+              <div class="input-group mt-2">
+                <input
+                  id="especialidad"
+                  type="text"
+                  formControlName="especialidad"
+                  placeholder="Ingrese nueva especialidad"
+                  class="form-control bg-dark text-light border-0 input-uniforme"
+                >
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  (click)="guardarEspecialidad(); accordion.toggle()"
+                  title="Guardar especialidad"
+                >
+               &gt;
+          </button>
+        </div>
+            </div>
+          </app-accordion-personalizado>
+        </div>
+            }
+      <!-- Fotos -->
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <div class="card col-5">
+          <img class="card__content" [src]="fotoPreviewUno()">
+          <button class="button" (click)="elegirImagen('1')">
+            <span>Elegir foto</span>
+          </button>
+        </div>
+
+        <div class="card col-5">
+          <img class="card__content" [src]="fotoPreviewDos()">
+          <button class="button" (click)="elegirImagen('2')">
+            <span>Elegir foto</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="col-12 d-flex justify-content-center gap-4 mt-4">
+        <button id="send" type="submit" (click)="confirmarDialog()" >Enviar</button>
+        <button id="limpar" type="reset" (click)="cerrarDialog(); form.reset()">Limpiar</button>
+      </div>
+
+    </div>
+  </form>
+</div>

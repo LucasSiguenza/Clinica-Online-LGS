@@ -4,6 +4,7 @@ export interface Usuario{
     uid?: string | null, 
     obra_social?: string | null,
     especialidad?: string | null,
+    estado?: string | boolean
     nombre: string ,
     apellido: string,
     edad: string,

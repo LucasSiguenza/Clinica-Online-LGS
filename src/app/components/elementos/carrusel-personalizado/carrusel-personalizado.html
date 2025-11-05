@@ -1,0 +1,12 @@
+<div class="carousel-container">
+  <div class="carousel-track" #track>
+    @for (card of cards; track $index) {
+      <div class="card" [style.background]="card.bg">
+        <img [src]="card.img" alt="{{card.img}}" />
+      </div>
+    }
+  </div>
+
+  <button class="btn-prev" (click)="prevCard()">❮</button>
+  <button class="btn-next" (click)="nextCard()">❯</button>
+</div>

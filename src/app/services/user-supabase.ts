@@ -19,14 +19,14 @@ export class UserSupabase {
 
   //? Instanciamos signals
 
-  private usuarioActual = signal<Usuario | null>(null);
-  private listaUsuarios = signal<Usuario[] | null>(null);
+  listaUsuarios = signal<Usuario[] | null>(null);
   private usuarioSeleccionado = signal<Usuario | null>(null);
 
   //! ======================= Métodos CRUD =======================
 
   async cargarListado(){
-    this.listaUsuarios.set(await this.obtenerListadoBD() ?? []); 
+    const lista = await this.obtenerListadoBD() ?? []; 
+    this.listaUsuarios.set(lista);
   }
 
   async actualizarUsuario(usr: Usuario){
@@ -45,16 +45,6 @@ export class UserSupabase {
   }
   //! ======================= Métodos de signals =======================
   
-  //? Usuario Actual
-  setUsuarioActual(usr: Usuario){
-    this.usuarioActual.set(usr); 
-  }
-  getUsuarioActual(){
-    return this.usuarioActual();
-  }
-  deseleccionarActual(){
-    this.usuarioActual.set(null)
-  }
   //? Usuario seleccionado
   deseleccionarUsuario(){
     this.usuarioSeleccionado.set(null);
@@ -66,16 +56,6 @@ export class UserSupabase {
     return this.usuarioSeleccionado();
   }
 
-  //? Lista de usuarios
-  setListaUsuarios(lista: Usuario[]){
-    this.listaUsuarios.set(lista); 
-  }
-  getListaUsuarios(){
-    return this.listaUsuarios();
-  }
-  eliminarLista(){
-    this.listaUsuarios.set(null)
-  }
   
 
   //! ======================= Métodos BD =======================
@@ -101,16 +81,30 @@ export class UserSupabase {
         dni: u.dni,
         correo: u.correo,
         perfil: u.perfil,
-        foto: this.obtenerUrlPublica(u.uid),
+        foto: this.obtenerUrlPublica(u),
+        estado: u.estado
       }));
     }
     
   
 
   private async actualizarUsuarioBD(usr: Usuario){
+    const usrAct ={
+      obra_social: usr.obra_social ,
+      especialidad: usr.especialidad ,
+      estado: usr.estado , 
+      nombre: usr.nombre ,
+      apellido: usr.apellido,
+      edad: usr.edad,
+      dni: usr.dni,
+      cuil: usr.cuil,
+      correo: usr.correo,
+      perfil: usr.perfil,
+    }
+
     const {data, error} = await this.supabase
     .from('usuarios')
-    .update(usr)
+    .update(usrAct)
     .eq('uid', usr.uid)
     .single()
 
@@ -129,7 +123,6 @@ export class UserSupabase {
     usr.foto.forEach(async u =>  (
       usr.uid = usr.uid+`${i}`,
       usr.foto = await this.subirFotoUsuario(usr, u)
-
     ))
     console.log('Usuario actualizado con éxito')
   }

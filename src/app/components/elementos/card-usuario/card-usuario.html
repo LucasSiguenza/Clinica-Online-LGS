@@ -1,0 +1,25 @@
+<div class="card-container">
+	<span class="pro">{{this.usuario.perfil}}</span>
+ <app-carrusel-personalizado [fotos]="usuario.foto"></app-carrusel-personalizado>	
+ <h3>{{this.usuario.nombre }} {{this.usuario.apellido}}</h3>
+	<h6>{{usuario.estado | formatoEstado}} </h6>
+	@if(usuario.estado == 'false'){
+	<div class="buttons">
+		<button class="primary ghost" (click)="aprobarUsuario(usuario)">
+			Aprobar
+		</button>
+	</div>	
+	}
+	<div class="buttons">
+		<button class="primary yellow" (click)="editarUsuario(usuario)">
+			Editar
+		</button>
+		<button class="primary blue" (click)="(usuario)">
+			Ver detalles
+		</button>
+		<button  class="block primary red" (click)="eliminarUsuario(usuario)">
+				Eliminar
+		</button>
+		<div class="skills">
+		</div>
+</div>

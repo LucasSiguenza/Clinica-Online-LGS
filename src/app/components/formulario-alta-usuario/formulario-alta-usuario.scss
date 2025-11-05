@@ -1,0 +1,173 @@
+form {
+  background-color: #444444;
+  border-radius: 10px;
+  width: 90%;
+  justify-content: center;
+  margin-top: 1vw;
+}
+
+.lb {
+  display: block;
+  margin-bottom: 10rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.infos[type="text"], 
+input[type="email"], 
+input[type="date"],
+input[type="password"] {
+  width: 100%;
+  padding: 1.5vw;
+  font-size: 1vw;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 0.1vh;
+  background-color: #333333;
+  color: white;
+}
+
+#send {
+  --glow-color: rgb(176, 255, 189);
+  --glow-spread-color: rgba(123, 255, 160, 0.781);
+  --enhanced-glow-color: rgb(182, 175, 71);
+  --btn-color: rgba(13, 241, 21, 0.508);
+  border: .25em solid var(--glow-color);
+  padding: 1em 2em;
+  color: var(--glow-color);
+  font-size: 14px;
+  font-weight: bold;
+  background-color: var(--btn-color);
+  border-radius: 1em;
+  outline: none;
+  box-shadow: 0 0 1em .25em var(--glow-color),
+        0 0 4em 1em var(--glow-spread-color),
+        inset 0 0 .05em .25em var(--glow-color);
+  text-shadow: 0 0 .5em var(--glow-color);
+  position: relative;
+  transition: all 0.3s;
+}
+
+#send::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 120%;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--glow-spread-color);
+  filter: blur(2em);
+  opacity: .7;
+  transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
+}
+
+#send:hover {
+  color: var(--btn-color);
+  background-color: var(--glow-color);
+  box-shadow: 0 0 1em .25em var(--glow-color),
+        0 0 4em 2em var(--glow-spread-color),
+        inset 0 0 .75em .25em var(--glow-color);
+}
+
+#send:active {
+  box-shadow: 0 0 0.6em .25em var(--glow-color),
+        0 0 2.5em 2em var(--glow-spread-color),
+        inset 0 0 .5em .25em var(--glow-color);
+}
+
+#limpar {
+  --glow-color: rgb(255, 176, 176);
+  --glow-spread-color: rgba(255, 123, 123, 0.781);
+  --enhanced-glow-color: rgb(182, 175, 71);
+  --btn-color: rgba(241, 13, 13, 0.508);
+  border: .25em solid var(--glow-color);
+  padding: 1em 2em;
+  color: var(--glow-color);
+  font-size: 14px;
+  font-weight: bold;
+  background-color: var(--btn-color);
+  border-radius: 1em;
+  outline: none;
+  box-shadow: 0 0 1em .25em var(--glow-color),
+        0 0 4em 1em var(--glow-spread-color),
+        inset 0 0 .05em .25em var(--glow-color);
+  text-shadow: 0 0 .5em var(--glow-color);
+  position: relative;
+  transition: all 0.3s;
+}
+
+#limpar::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 120%;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--glow-spread-color);
+  filter: blur(2em);
+  opacity: .7;
+  transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
+}
+
+#limpar:hover {
+  color: var(--btn-color);
+  background-color: var(--glow-color);
+  box-shadow: 0 0 1em .25em var(--glow-color),
+        0 0 4em 2em var(--glow-spread-color),
+        inset 0 0 .75em .25em var(--glow-color);
+}
+
+#limpar:active {
+  box-shadow: 0 0 0.6em .25em var(--glow-color),
+        0 0 2.5em 2em var(--glow-spread-color),
+        inset 0 0 .5em .25em var(--glow-color);
+}
+button{
+    font-size: 1rem;
+    color: white;
+    background: transparent;
+    border: 0;
+}
+.card {
+  width: 10vw;
+  height: 15vh;
+  border-radius: 20px;
+  padding: 5px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+}
+
+.card__content {
+  background: rgb(5, 6, 45);
+  border-radius: 17px;
+  width: 100%;
+  height: 100%;
+}
+
+
+.container-fluid{
+  width: fit-content;
+  height: fit-content;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* evita scroll horizontal si el fondo se desborda */
+
+  /* --- fondo personalizado --- */
+  background: repeating-conic-gradient(
+        from 30deg,
+        #00000000 0 120deg,
+        #3c3c3c 0 180deg
+      )
+      calc(0.5 * 200px) calc(0.5 * 200px * 0.577),
+    repeating-conic-gradient(
+      from 30deg,
+      #363534 0 60deg,
+      #4e4f51 0 120deg,
+      #3c3c3c 0 180deg
+    );
+  background-size: 200px calc(200px * 0.577);
+  background-repeat: repeat;
+  background-position: center;
+}

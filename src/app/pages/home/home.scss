@@ -1,4 +1,9 @@
 /* Carrusel a pantalla completa */
+*{
+ text-shadow:
+    3px 3px 6px rgba(0, 0, 0, 0.8),
+    -1px -1px 2px rgba(255, 255, 255, 0.3);
+}
 html, body {
   height: 100%;
   margin: 0;
@@ -22,13 +27,13 @@ html, body {
 }
 
 .bg1 {
-  background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/158072/spiderweb.jpg');
+  background-image: url('../../../../public/assets/img/img\ clinica\ 1.jpg');
 }
 
 .bg2 {
-  background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/158072/hearthand.jpg');
+  background-image: url('../../../../public/assets/img/clinica\ img\ 2.jpg');
 }
 
 .bg3 {
-  background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/158072/woman-camera.jpg');
+  background-image: url('../../../../public/assets/img/img\ clinica\ 3.jpg');
 }

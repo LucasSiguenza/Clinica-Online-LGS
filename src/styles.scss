@@ -1,17 +1,91 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$cyan-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
 @import "bootstrap/dist/css/bootstrap.min.css";
 *, ::after, ::before {
   box-sizing: border-box;
 }
+ .container {
+  /* --- comportamiento general --- */
+  display: flex;
+  flex-direction: column; /* contenido en columna */
+  justify-content: center; /* centra verticalmente */
+  align-items: center; /* centra horizontalmente */
+  min-height: 100vh; /* ocupa toda la altura visible */
+  width: 100%;
+  max-width: 1200px; /* ancho máximo del contenido */
+  padding-top: 80px; /* espacio desde el header fijo */
+  padding-bottom: 40px; /* espacio inferior */
+  overflow-y: auto; /* permite scroll si excede */
+  position: relative;
+  z-index: 1;
+
+  /* --- espaciado visual similar a py-5 de Bootstrap --- */
+  padding-block: 3rem; /* equivalente a py-5 */
+
+  /* --- fondo decorativo --- */
+  background: repeating-conic-gradient(
+        from 30deg,
+        #00000000 0 120deg,
+        #3c3c3c 0 180deg
+      )
+      calc(0.5 * 200px) calc(0.5 * 200px * 0.577),
+    repeating-conic-gradient(
+      from 30deg,
+      #ffb835 0 60deg,
+      #4e4f51 0 120deg,
+      #3c3c3c 0 180deg
+    );
+  background-size: 200px calc(200px * 0.577);
+}
+
+
 
 $bg_body: #212121; 
 $bg_gradient_last_color: rgba(0,212,255,1);
 $bg_gradient: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(52,9,121,1) 37%, $bg_gradient_last_color 94%);
 
+html,
 body {
   background-color: $bg_body;
   color: #fff;
   font-family: monospace, serif;
   letter-spacing: 0.05em;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* elimina el desplazamiento horizontal */
 }
 
 h1 {
@@ -207,3 +281,6 @@ h1 {
   position: relative;
   z-index: 2;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
