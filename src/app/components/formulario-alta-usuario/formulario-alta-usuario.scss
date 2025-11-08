@@ -1,36 +1,118 @@
-form {
-  background-color: #444444;
+/* ====== Variables de color (mantengo tu paleta) ====== */
+$bg-form: #444444;
+$input-bg: #333333;
+$input-text: #ffffff;
+
+/* ====== Form wrapper ====== */
+.form-wrapper {
+  background-color: $bg-form;
   border-radius: 10px;
-  width: 90%;
-  justify-content: center;
-  margin-top: 1vw;
-}
-
-.lb {
-  display: block;
-  margin-bottom: 10rem;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.infos[type="text"], 
-input[type="email"], 
-input[type="date"],
-input[type="password"] {
+  height: 100%;
   width: 100%;
-  padding: 1.5vw;
-  font-size: 1vw;
-  border-radius: 5px;
-  border: none;
-  margin-bottom: 0.1vh;
-  background-color: #333333;
-  color: white;
+  max-width: 900px; /* límite para pantallas grandes */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  padding: 1.5rem;
+  box-sizing: border-box;
 }
 
+/* Restauración del fondo original (tu patrón) */
+.container-fluid {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  background: repeating-conic-gradient(
+        from 30deg,
+        #00000000 0 120deg,
+        #3c3c3c 0 180deg
+      )
+      calc(0.5 * 200px) calc(0.5 * 200px * 0.577),
+    repeating-conic-gradient(
+      from 30deg,
+      #363534 0 60deg,
+      #4e4f51 0 120deg,
+      #3c3c3c 0 180deg
+    );
+  background-size: 200px calc(200px * 0.577);
+  background-repeat: repeat;
+  background-position: center;
+  box-sizing: border-box;
+}
+
+/* ====== Inputs ====== */
+.input-uniforme,
+.form-control {
+  width: 100%;
+  box-sizing: border-box; /* evita overflow */
+  padding: 0.9rem 0.9rem;
+  font-size: 1rem;       /* legible en móvil */
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 0.25rem;
+  background-color: $input-bg;
+  color: $input-text;
+}
+
+/* valid state spacing para mostrar mensajes debajo */
+.form-label {
+  margin-bottom: 0.25rem;
+}
+
+/* small helpers para contadores (DNI/ CUIL) */
+.position-absolute.top-50.end-0.translate-middle-y {
+  right: 0.75rem;
+}
+
+/* ====== Cards para fotos ====== */
+.card {
+  border-radius: 20px;
+  padding: 6px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+}
+
+.foto-card {
+  width: 140px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.card__content {
+  background: rgb(5, 6, 45);
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* botón dentro de la card: restaurando estilo pero con tamaño móvil aceptable */
+.btn-foto {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* ====== Botones: restauramos tu glow (manteniendo original) ====== */
 #send {
   --glow-color: rgb(176, 255, 189);
   --glow-spread-color: rgba(123, 255, 160, 0.781);
-  --enhanced-glow-color: rgb(182, 175, 71);
   --btn-color: rgba(13, 241, 21, 0.508);
   border: .25em solid var(--glow-color);
   padding: 1em 2em;
@@ -70,16 +152,10 @@ input[type="password"] {
         inset 0 0 .75em .25em var(--glow-color);
 }
 
-#send:active {
-  box-shadow: 0 0 0.6em .25em var(--glow-color),
-        0 0 2.5em 2em var(--glow-spread-color),
-        inset 0 0 .5em .25em var(--glow-color);
-}
-
+/* Limpiar (tu otro glow) */
 #limpar {
   --glow-color: rgb(255, 176, 176);
   --glow-spread-color: rgba(255, 123, 123, 0.781);
-  --enhanced-glow-color: rgb(182, 175, 71);
   --btn-color: rgba(241, 13, 13, 0.508);
   border: .25em solid var(--glow-color);
   padding: 1em 2em;
@@ -111,63 +187,112 @@ input[type="password"] {
   transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
 }
 
-#limpar:hover {
-  color: var(--btn-color);
-  background-color: var(--glow-color);
-  box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 2em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
+/* ====== Mobile adjustments (fix inputs off-screen and scale photos / buttons) ====== */
+@media (max-width: 768px) {
+  .form-wrapper {
+    padding: 1rem;
+    max-width: 95%;
+  }
+
+  .foto-card {
+    width: 45%;
+    min-width: 120px;
+  }
+
+  .card__content {
+    max-height: 140px;
+  }
+
+  #send, #limpar {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 0.9rem;
+  }
 }
 
-#limpar:active {
-  box-shadow: 0 0 0.6em .25em var(--glow-color),
-        0 0 2.5em 2em var(--glow-spread-color),
-        inset 0 0 .5em .25em var(--glow-color);
-}
-button{
-    font-size: 1rem;
-    color: white;
-    background: transparent;
-    border: 0;
-}
-.card {
-  width: 10vw;
-  height: 15vh;
-  border-radius: 20px;
-  padding: 5px;
-  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
-  background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+/* ====== Mat Dialog custom panel class (centrado y full-screen en móvil) ======
+   La clase se aplica con panelClass: 'mi-form-dialog-panel' en la llamada al dialog.
+*/
+.mi-form-dialog-panel .mat-dialog-container {
+  padding: 0; /* el form tiene su propio padding */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-shadow: none;
 }
 
-.card__content {
-  background: rgb(5, 6, 45);
-  border-radius: 17px;
-  width: 100%;
+/* Para pantallas pequeñas hacemos que el dialog ocupe toda la pantalla pero mantenga el form centrado */
+@media (max-width: 600px) {
+  .mi-form-dialog-panel .mat-dialog-container {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+/* ====== Ajustes para ocupar pantalla completa y evitar scroll innecesario ====== */
+.full-height-form {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Evita el overflow del body al abrir validaciones */
+html, body {
   height: 100%;
+  overflow: hidden; /* sin scroll global */
 }
 
+/* Permite que solo el form interno haga scroll si los mensajes exceden */
+.container-fluid {
+  overflow-y: auto; /* scroll local si es estrictamente necesario */
+}
 
-.container-fluid{
-  width: fit-content;
-  height: fit-content;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* evita scroll horizontal si el fondo se desborda */
+/* ====== Mensajes de validación visibles ====== */
+.text-danger,
+.text-warning {
+  display: block;
+  margin-top: 0.25rem;
+  word-wrap: break-word;
+}
 
-  /* --- fondo personalizado --- */
-  background: repeating-conic-gradient(
-        from 30deg,
-        #00000000 0 120deg,
-        #3c3c3c 0 180deg
-      )
-      calc(0.5 * 200px) calc(0.5 * 200px * 0.577),
-    repeating-conic-gradient(
-      from 30deg,
-      #363534 0 60deg,
-      #4e4f51 0 120deg,
-      #3c3c3c 0 180deg
-    );
-  background-size: 200px calc(200px * 0.577);
-  background-repeat: repeat;
-  background-position: center;
+/* ====== Adaptación para móviles pequeños ====== */
+@media (max-height: 700px) {
+  .full-height-form {
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .container-fluid {
+    align-items: flex-start; /* acomoda el form al inicio */
+  }
+}
+.full-height-form {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 👈 antes era center */
+  padding-top: 3vh; /* 👈 leve margen superior visual */
+  padding-bottom: 3vh;
+  overflow-y: auto; /* permite ver todo el contenido si el alto no alcanza */
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden; /* mantenemos sin scroll global */
+}
+
+.container-fluid {
+  overflow-y: visible; /* 👈 dejamos que el form gestione su propio scroll */
+}
+@media (min-width: 769px) {
+  html, body {
+    overflow: auto !important; /* habilita scroll sólo en escritorio */
+  }
 }

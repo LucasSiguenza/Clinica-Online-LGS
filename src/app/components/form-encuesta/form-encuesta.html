@@ -1,0 +1,33 @@
+@if (!enviada()) {
+  <div class="encuesta-container">
+    <h2>Encuesta de satisfacción</h2>
+    <p>¿Cómo calificarías tu experiencia con la clínica?</p>
+
+    <div class="opciones">
+      @for (opcion of opciones; track opcion) {
+        <label>
+          <input
+            type="radio"
+            name="opinion"
+            [value]="opcion"
+            formControlName="seleccion"
+          />
+          {{ opcion }}
+        </label>
+      }
+    </div>
+
+    <button
+      class="btn-enviar"
+      [disabled]="!seleccion()"
+      (click)="enviar()"
+    >
+      Enviar respuesta
+    </button>
+  </div>
+} @else {
+  <div class="gracias-container">
+    <h2>¡Gracias por tu opinión!</h2>
+    <p>Tu respuesta fue: <strong>{{ seleccion() }}</strong></p>
+  </div>
+}

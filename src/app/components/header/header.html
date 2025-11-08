@@ -1,21 +1,29 @@
 <div class="main-header">
-    <div class="logo">
-        <h1>LGS Team - Clinica digital</h1>
-    </div>
-    <nav class="nav-menu">
-        <ul>
-            <li><a href="/home">Inicio</a></li>
-            <li class="dropdown">
-                <a href="/home" class="dropbtn">Sobre nosotros</a>
-                <div class="dropdown-content">
-                    <a href="/home">Equipo</a>
-                    <a href="/home">Compañía</a>
-                </div>
-            </li>
-            <li><a href="/home">Turnos globales</a></li>
-            <li><a href="/home">Encuestas</a></li>
-            <li><a (click)="irPanelUsuarios()" class="btn btn-outline-primary">Panel de administración</a></li>
-            <li><a (click)="cerrarSesion()" class="btn btn-outline-danger">Cerrar sesión</a></li>
-        </ul>
-    </nav>
+  <div class="logo">
+    <h1>LGS Team - Clinica digital</h1>
+  </div>
+
+  <!-- Botón hamburguesa (solo visible en móvil) -->
+  <div class="hamburger" (click)="menuAbierto = !menuAbierto">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav class="nav-menu" [class.open]="menuAbierto">
+    <ul>
+      <li><a href="/home">Inicio</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropbtn">Sobre nosotros</a>
+        <div class="dropdown-content">
+          <a href="/home">Equipo</a>
+          <a href="/home">Compañía</a>
+        </div>
+      </li>
+      <li><a (click)="irPanelTurnos()" class="btn btn-outline-warning">Turnos globales</a></li>
+      <li><a (click)="irPanelEncuestas()" class="btn btn-outline-success">Encuestas</a></li>
+      <li><a (click)="irPanelUsuarios()" class="btn btn-outline-primary">Panel de administración</a></li>
+      <li><a (click)="cerrarSesion()" class="btn btn-outline-danger">Cerrar sesión</a></li>
+    </ul>
+  </nav>
 </div>

@@ -1,48 +1,38 @@
 <app-header></app-header>
 
-<!-- Contenedor a pantalla completa -->
-<div class="container-fluid min-vh-100 d-flex flex-column justify-content-start align-items-center bg-dark py-4">
+<!-- 🔹 Contenedor principal a pantalla completa -->
+<div class="main-container d-flex flex-column justify-content-between align-items-center text-center">
 
-  <!-- Botón Añadir -->
-  <div class="text-center mb-4">
-    <button class="btn btn-primary" (click)="openModal()">
-      ➕ Añadir usuario
-    </button>
-  </div>
+  <!-- 🔸 Botón Añadir -->
+  <button class="add-user-btn mt-3" (click)="openModal()">
+    ➕ Añadir usuario
+  </button>
 
-  <!-- Modal -->
+  <!-- 🔸 Contenido principal (cards y paginación) -->
+  <div class="content-wrapper d-flex flex-column justify-content-center align-items-center flex-grow-1">
 
-   <!-- Número de página -->
-    <div class="text-center mt-2">
-      <span class="text-white fw-bold">
-        Página {{ pagina() }} / {{ paginasTotales() }}
-      </span>
-    </div>
-  <!-- Contenido principal -->
-  <div class="w-100 d-flex flex-column align-items-center" style="max-width: 900px;">
-    
-    <!-- Controles de paginación (laterales + cards al centro) -->
-    <div class="d-flex justify-content-between align-items-center w-100 mb-3">
-      <button class="btn btn-outline-light" type="button" (click)="prevPage()">
+    <div class="pagination-controls mb-3">
+      <button class="carousel-control-prev" (click)="prevPage()">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Anterior</span>
       </button>
 
-      <!-- Cards centradas -->
-      <div class="d-flex flex-wrap justify-content-center gap-4">
+      <div class="cards-wrapper d-flex flex-wrap justify-content-center gap-4 mx-3">
         @for (u of listaPaginada; track u.id) {
-          <div class="col-auto">
-            <app-card-usuario [usuario]="u"></app-card-usuario>
-          </div>
+          <app-card-usuario [usuario]="u"></app-card-usuario>
         }
       </div>
 
-      <button class="btn btn-outline-light" type="button" (click)="nextPage()">
+      <button class="carousel-control-next" (click)="nextPage()">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Siguiente</span>
       </button>
     </div>
 
- 
+    <!-- 🔸 Número de página -->
+    <div class="page-indicator mb-3">
+      <span>Página {{ pagina() }} / {{ paginasTotales() }}</span>
+    </div>
   </div>
+
 </div>

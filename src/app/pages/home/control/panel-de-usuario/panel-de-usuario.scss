@@ -1,84 +1,9 @@
-/* 🔹 Estructura general */
-.carousel-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-/* 🔹 Barra superior con fondo transparente */
-.carousel-header {
+/* 🔹 Contenedor general */
+.main-container {
+  min-height: 100vh;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  background: transparent; /* ✅ transparente */
-  padding: 12px 0;
-  position: static; /* opcional, si querés que quede visible al hacer scroll */
-  top: auto; /* coincide con el header */
-  z-index: 0;
-}
-
-/* 🔹 Botón principal */
-.add-user-btn {
-  background: rgba(90, 78, 229, 0.9);
-  color: white;
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.add-user-btn:hover {
-  background: rgba(115, 107, 255, 1);
-  transform: translateY(-2px);
-}
-
-/* 🔹 Paginación */
-.pagination-controls {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-  position: static;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    rgb(155, 42, 42) 0%,
-    rgb(199, 130, 87) 50%,
-    rgb(237, 188, 83) 100%
-  );
-  border: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  opacity: 0.85;
-  transform: scale(1.05);
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  filter: invert(1);
-}
-
-.container-fluid{
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* evita scroll horizontal si el fondo se desborda */
-
-  /* --- fondo personalizado --- */
+  overflow: hidden;
+  padding: 1rem;
   background: repeating-conic-gradient(
         from 30deg,
         #00000000 0 120deg,
@@ -94,6 +19,107 @@
   background-size: 200px calc(200px * 0.577);
   background-repeat: repeat;
   background-position: center;
+  color: #fff;
+}
+
+/* 🔹 Botón principal */
+.add-user-btn {
+  background: rgba(90, 78, 229, 0.9);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background: rgba(115, 107, 255, 1);
+    transform: translateY(-2px);
+  }
+}
+
+/* 🔹 Contenedor de contenido */
+.content-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🔹 Paginación */
+.pagination-controls {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: nowrap;
+  position: relative; /* importante para que los botones se posicionen dentro */
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🔹 Cards (centradas y flexibles) */
+.cards-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  flex: 1;
+  max-width: 80vw;
+}
+
+/* 🔹 Botones de navegación */
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute; /* ahora los ubicamos flotando */
+  top: 50%; /* centra verticalmente */
+  transform: translateY(-50%); /* corrige el centrado vertical */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    rgb(42, 59, 155) 0%,
+    rgb(87, 135, 199) 50%,
+    rgb(237, 188, 83) 100%
+  );
+  border: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 10; /* para que queden por encima de las cards */
 }
 
 
+
+/* 🔹 Indicador de página */
+.page-indicator {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* 🔹 Responsivo */
+@media (max-width: 768px) {
+  .pagination-controls {
+    gap: 0.6rem;
+  }
+
+  .cards-wrapper {
+    max-width: 95vw;
+    gap: 0.8rem;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 38px;
+    height: 38px;
+  }
+
+  .add-user-btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+}

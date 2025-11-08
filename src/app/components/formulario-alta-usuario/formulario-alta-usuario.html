@@ -1,5 +1,5 @@
 <div class="container-fluid d-flex justify-content-center">
-  <form class="d-flex align-items-center flex-column p-4 w-75" [formGroup]="form">
+  <form class="form-wrapper full-height-form d-flex align-items-center flex-column p-4 w-75" [formGroup]="form">
     <div class="row g-3 w-100">
 
       <!-- Nombre -->
@@ -148,17 +148,12 @@
       <!-- Fotos -->
       <div class="d-flex gap-3 justify-content-center flex-wrap">
         <div class="card col-5">
-          <img class="card__content" [src]="fotoPreviewUno()">
-          <button class="button" (click)="elegirImagen('1')">
-            <span>Elegir foto</span>
-          </button>
+          <img class="card__content" (click)="elegirImagen('1')" [src]="fotoPreviewUno()">
+
         </div>
 
         <div class="card col-5">
-          <img class="card__content" [src]="fotoPreviewDos()">
-          <button class="button" (click)="elegirImagen('2')">
-            <span>Elegir foto</span>
-          </button>
+          <img class="card__content" (click)="elegirImagen('2')" [src]="fotoPreviewDos()">
         </div>
       </div>
 

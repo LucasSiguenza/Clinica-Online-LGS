@@ -1,0 +1,129 @@
+/* ====== Panel de Turnos ====== */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  min-height: 100vh;
+  padding: 3rem 1rem;
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  font-family: monospace, serif;
+}
+
+/* ====== Encabezado ====== */
+.turnos-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.2rem;
+    color: #00eaff;
+    text-shadow: 0 0 10px #00eaff, 0 0 20px #0090ff;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #ccc;
+  }
+}
+
+/* ====== Tabla ====== */
+.turnos-table {
+  width: 100%;
+  max-width: 1100px;
+  border-collapse: collapse;
+  background: rgba(40, 40, 40, 0.85);
+  border: 2px solid #00eaff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 234, 255, 0.2);
+
+  th {
+    background: linear-gradient(90deg, #0090ff 0%, #00eaff 100%);
+    color: #000;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    color: #eee;
+  }
+
+  tr:hover {
+    background-color: rgba(0, 234, 255, 0.1);
+    transition: background 0.2s ease-in-out;
+  }
+}
+
+/* ====== Acciones ====== */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+
+  button {
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-transform: uppercase;
+    font-family: monospace, serif;
+  }
+
+  .btn-editar {
+    background: linear-gradient(90deg, #ffb835 0%, #ff9100 100%);
+    color: #000;
+
+    &:hover {
+      box-shadow: 0 0 10px #ffb835;
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-eliminar {
+    background: linear-gradient(90deg, #ff4d4d 0%, #b81414 100%);
+    color: #fff;
+
+    &:hover {
+      box-shadow: 0 0 10px #ff4d4d;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* ====== Estado vacío ====== */
+.sin-turnos {
+  margin-top: 3rem;
+  font-size: 1.2rem;
+  color: #ffb835;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(255, 184, 53, 0.4);
+}
+
+/* ====== Responsividad ====== */
+@media (max-width: 768px) {
+  .turnos-table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

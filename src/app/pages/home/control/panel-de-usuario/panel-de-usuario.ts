@@ -76,11 +76,14 @@ export class PanelDeUsuario {
   
   openModal() {
   this.matDialog.open(FormularioAltaUsuario, {
-      width: "100%",
-      height: "100%",
-      disableClose: true,  
-      autoFocus: true,     
-    })
+      width: '100%',
+      height: '100%',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-dialog',
+      disableClose: true,
+      autoFocus: false,
+    });
   }
 
  async añadirUsuario(){

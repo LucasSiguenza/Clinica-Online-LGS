@@ -4,6 +4,7 @@ import { Home } from './pages/home/home';
 import { Register } from './pages/auth/register/register';
 import { PanelDeUsuario } from './pages/home/control/panel-de-usuario/panel-de-usuario';
 import { PanelDeTurnos } from './pages/home/control/panel-de-turnos/panel-de-turnos';
+import { PanelEncuesta } from './pages/home/panel-encuesta/panel-encuesta';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'auth/login',  pathMatch: 'full' },
@@ -12,4 +13,5 @@ export const routes: Routes = [
     { path: 'home', component: Home },
     { path: 'home/control/panel-usuarios', component:PanelDeUsuario},
     { path: 'home/control/panel-turnos', component:PanelDeTurnos},
+    { path: 'home/control/panel-encuestas', component:PanelEncuesta},
 ];

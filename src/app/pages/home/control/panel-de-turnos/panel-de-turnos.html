@@ -1,1 +1,73 @@
-<p>panel-de-turnos works!</p>
+<app-header></app-header>
+<div class="turnos-panel container py-4">
+  <h2 class="text-center mb-4">Mis Turnos</h2>
+
+  <!-- 🔍 Filtros sin combobox -->
+  <div class="filtros mb-4 d-flex flex-wrap gap-3 justify-content-center">
+    <input
+      type="text"
+      class="form-control filtro"
+      placeholder="Filtrar por especialidad..."
+      [value]="filtroEspecialidad()"
+      (input)="filtroEspecialidad.set($any($event.target).value)" />
+
+    <input
+      type="text"
+      class="form-control filtro"
+      placeholder="Filtrar por especialista..."
+      [value]="filtroEspecialista()"
+      (input)="filtroEspecialista.set($any($event.target).value)" />
+  </div>
+
+  <!-- 🩺 Listado -->
+  <div class="lista-turnos row g-4">
+    @for (t of turnos(); track t.especialista) {
+      <div class="col-12 col-md-6 col-lg-4">
+        <article class="card turno-card h-100">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h5 class="card-title mb-1">{{ t.especialista }}</h5>
+                <small class="text-muted d-block">{{ t.paciente }}</small>
+              </div>
+              <span class="badge estado {{ t.estadoClass }}">{{ t.estado }}</span>
+            </div>
+
+            <p class="mb-1">
+              <i class="bi bi-calendar-event"></i>
+              <strong>{{ t.fecha }}</strong> — {{ t.hora }}
+            </p>
+            <p class="mb-3">
+              <strong>Especialidad:</strong> {{ t.especialidad }}
+            </p>
+
+            <!-- Acciones -->
+            <div class="mt-auto acciones d-flex flex-wrap gap-2">
+              @if (t.mostrarCancelar) {
+                <button class="btn btn-outline-danger btn-sm">Cancelar</button>
+              }
+              @if (t.mostrarVerResena) {
+                <button class="btn btn-outline-primary btn-sm">Ver Reseña</button>
+              }
+              @if (t.mostrarEncuesta) {
+                <button class="btn btn-outline-success btn-sm">Completar Encuesta</button>
+              }
+              @if (t.mostrarCalificar) {
+                <button class="btn btn-outline-warning btn-sm">Calificar Atención</button>
+              }
+              @if (t.mostrarAceptar) {
+                <button class="btn btn-outline-secondary btn-sm">Aceptar</button>
+              }
+              @if (t.mostrarRechazar) {
+                <button class="btn btn-outline-dark btn-sm">Rechazar</button>
+              }
+              @if (t.mostrarFinalizar) {
+                <button class="btn btn-outline-info btn-sm">Finalizar Turno</button>
+              }
+            </div>
+          </div>
+        </article>
+      </div>
+    }
+  </div>
+</div>
