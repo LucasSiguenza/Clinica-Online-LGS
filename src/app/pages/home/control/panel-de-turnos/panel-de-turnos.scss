@@ -1,7 +1,7 @@
 /* ====== Panel de Turnos ====== */
 
 :host {
-  display: flex;
+  display: contents;
   flex-direction: column;
   align-items: center;
   justify-content: start;
@@ -33,9 +33,13 @@
 }
 
 /* ====== Tabla ====== */
+.turnos-panel{
+  width: 100%;
+  display: flex;
+  min-width: max-content;
+}
 .turnos-table {
   width: 100%;
-  max-width: 1100px;
   border-collapse: collapse;
   background: rgba(40, 40, 40, 0.85);
   border: 2px solid #00eaff;

@@ -76,7 +76,7 @@
 /* 🔹 Botones de navegación */
 .carousel-control-prev,
 .carousel-control-next {
-  position: absolute; /* ahora los ubicamos flotando */
+  position: fixed; /* ahora los ubicamos flotando */
   top: 50%; /* centra verticalmente */
   transform: translateY(-50%); /* corrige el centrado vertical */
   width: 50px;
@@ -85,8 +85,8 @@
   background: linear-gradient(
     90deg,
     rgb(42, 59, 155) 0%,
-    rgb(87, 135, 199) 50%,
-    rgb(237, 188, 83) 100%
+    rgb(87, 177, 199) 50%,
+    rgb(83, 237, 119) 100%
   );
   border: none;
   transition: opacity 0.3s ease, transform 0.3s ease;

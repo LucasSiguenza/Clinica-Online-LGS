@@ -1,12 +1,14 @@
 .encuesta-container,
 .gracias-container {
+  height: 100%;
+  min-height: 100vw;
   background-color: #444;
   color: #fff;
   border-radius: 10px;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 0rem auto;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
   text-align: center;
 }
