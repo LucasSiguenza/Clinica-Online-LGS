@@ -6,6 +6,7 @@ import { Utils } from '../../../services/util';
 import { UserSupabase } from '../../../services/user-supabase';
 import { MatDialog } from '@angular/material/dialog';
 import { FormularioAltaUsuario } from '../../formulario-alta-usuario/formulario-alta-usuario';
+import { VerDetallesUsuario } from '../../ver-detalles-usuario/ver-detalles-usuario';
 
 @Component({
   selector: 'app-card-usuario',
@@ -67,6 +68,14 @@ export class CardUsuario {
         this.utilSvc.mostrarToast('Acción cancelada', 'success','center',1500);       
       }
     });
+  }
 
+  async verDetalles(usr: Usuario){
+    this.userSvc.setUsuarioSeleccionado(usr);
+    this.matDialog.open(VerDetallesUsuario, {
+      width: '25vw',
+      height: '78vh', 
+      
+    });
   }
 }

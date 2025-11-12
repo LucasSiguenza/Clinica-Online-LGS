@@ -1,0 +1,13 @@
+<div class="dias-grid">
+  @for (day of dias; track $index) {
+    <label class="dia-item">
+      <input
+        type="radio"
+        name="diaSemana"
+        [value]="day.valor"
+        (change)="seleccionar(day.valor)"
+      />
+      <span>{{ day.nombre }}</span>
+    </label>
+  }
+</div>

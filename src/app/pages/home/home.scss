@@ -37,3 +37,14 @@ html, body {
 .bg3 {
   background-image: url('../../../../public/assets/img/img\ clinica\ 3.jpg');
 }
+
+::ng-deep .dialog-turno .mat-dialog-container {
+  background: transparent; /* para que respete el fondo de tu componente */
+  padding: 0;              /* quita el padding del contenedor */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+  height: 100%;
+  border-radius: 20px;
+}

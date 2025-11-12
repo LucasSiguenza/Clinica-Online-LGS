@@ -1,0 +1,98 @@
+.card {
+  width: 100%;
+  height: 95%;
+  background: #07182E;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 20px;
+  color: #fff;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.card-content {
+  z-index: 2;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* centra solo la foto */
+.card-content app-carrusel-personalizado {
+  display: flexbox;
+  margin: 0;
+}
+
+.card h3 {
+  z-index: 2;
+  color: white;
+  margin-top: 0.3rem;
+  font-size: 0.9em;
+  text-align: left;
+}
+
+.card p,
+.card section {
+  z-index: 2;
+  color: #ddd;
+  font-size: 0.9em;
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 130%;
+  background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
+  animation: rotBGimg 3s linear infinite;
+  transition: all 0.2s linear;
+}
+
+@keyframes rotBGimg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  background: #07182E;
+  border-radius: 15px;
+  z-index: 1;
+}
+
+.card:hover::before {
+  background-image: linear-gradient(180deg, rgb(81, 255, 0), purple);
+  animation: rotBGimg 3.5s linear infinite;
+}
+
+/* ===== Responsividad ===== */
+@media (max-width: 30vw) {
+  .card {
+    padding: 0.5rem;
+    border-radius: 15px;
+  }
+
+  .card h3 {
+    font-size: 1.1em;
+  }
+.card-content app-carrusel-personalizado {
+    width: 20vw;
+}
+  .card p {
+    font-size: 0.8em;
+  }
+}

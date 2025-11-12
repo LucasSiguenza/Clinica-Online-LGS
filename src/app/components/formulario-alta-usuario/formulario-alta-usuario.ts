@@ -6,10 +6,11 @@ import { AccordionPersonalizado } from "../elementos/accordion-personalizado/acc
 import { UserSupabase } from '../../services/user-supabase';
 import { Usuario } from '../../models/Usuario';
 import { AuthSupabase } from '../../services/auth-supabase';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-formulario-alta-usuario',
-  imports: [ReactiveFormsModule, AccordionPersonalizado],
+  imports: [ReactiveFormsModule, AccordionPersonalizado, TitleCasePipe],
   templateUrl: './formulario-alta-usuario.html',
   styleUrl: './formulario-alta-usuario.scss'
 })
@@ -111,9 +112,6 @@ export class FormularioAltaUsuario {
   guardarEspecialidad() {
     let especialidad = this.form.controls.especialidad.value || '';
 
-    // Reemplaza todos los espacios (uno o más) por "-"
-    especialidad = especialidad.trim().replace(/\s+/g, '-');
-
     if (especialidad) {
       this.form.controls.especialidad.setValue(especialidad);
       console.log('Especialidad guardada:', especialidad);
@@ -152,6 +150,7 @@ export class FormularioAltaUsuario {
         obraSocial: 'no'
       })
     }
+    const isEmpleado = this.form.controls.perfil.value == 'empleado'
     const usuario: Usuario = {
       nombre: String(this.form.controls.nombre.value),
       apellido: String(this.form.controls.apellido.value),
@@ -161,7 +160,9 @@ export class FormularioAltaUsuario {
       edad: String(this.form.controls.edad.value),
       foto: [String(this.form.controls.foto1.value),String(this.form.controls.foto2.value)],
       obra_social: this.form.controls.obraSocial.value,
+      especialidad: this.form.controls.especialidad.value,
       perfil: String(this.form.controls.perfil.value),
+      isEmpleado: isEmpleado,
     }
     
     const contrasenia = this.form.controls.contrasenia.value
@@ -175,6 +176,7 @@ export class FormularioAltaUsuario {
         await this.userSvc.actualizarUsuario(usuarioEdit);
       }
     } catch(e){
+      console.error(JSON.stringify(e));
       this.utilsSvc.mostrarAlert({
         title: `Algo salió mal: ${(e as Error).cause}`,
         text: `Error: ${(e as Error).message}`,

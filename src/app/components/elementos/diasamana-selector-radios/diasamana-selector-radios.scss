@@ -1,0 +1,51 @@
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  gap: 0.5rem;
+  justify-items: center;
+  align-items: center;
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+.dia-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #000;
+  justify-content: center;
+  background: var(--color-dia, #f0f0f0);
+  padding: 0.4rem 0.6rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 120px;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto hover */
+.dia-item:hover {
+  transform: scale(1.05);
+}
+
+/* Oculta el input */
+.dia-item input[type="radio"] {
+  display: none;
+}
+
+/* Día seleccionado */
+.dia-item input[type="radio"]:checked + span {
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Multicolor (pasteles suaves) */
+.dia-item:nth-child(1) { background-color: #ffadad; } /* Lunes */
+.dia-item:nth-child(2) { background-color: #ffd6a5; } /* Martes */
+.dia-item:nth-child(3) { background-color: #fdffb6; } /* Miércoles */
+.dia-item:nth-child(4) { background-color: #caffbf; } /* Jueves */
+.dia-item:nth-child(5) { background-color: #9bf6ff; } /* Viernes */
+.dia-item:nth-child(6) { background-color: #bdb2ff; } /* Sábado */
+.dia-item:nth-child(7) { background-color: #ffc6ff; } /* Domingo */

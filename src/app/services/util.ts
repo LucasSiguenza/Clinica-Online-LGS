@@ -157,6 +157,37 @@ mostrarToast(
     const blob = new Blob([byteArray], { type: mimeType });
     return blob;
   }
+  //! ================== Formateo de strings ==================
+  formatoSB(valor: string): string {
+    return valor
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')                 //^ elimina acentos (ej: "clínica" → "clinica")
+      .replace(/[\u0300-\u036f]/g, '')  //^ limpia diacríticos
+      .replace(/\s+/g, '-');            //^ reemplaza espacios por guiones 
+  }
+  formatoDesdeSB(valor: string): string {
+    return valor
+      .split('-')
+      .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+      .join(' ');
+  }
+
+  /**
+   * Convierte cualquier cadena a Capitalize Case (solo la primera letra en mayúscula).
+   * Si la cadena contiene varias palabras, respeta los espacios y las mayúsculas iniciales de cada una.
+   * Ejemplo: "juAN péREz" → "Juan Pérez"
+   */
+  toCapitalizeCase(value: string | null | undefined): string {
+    if (!value) return '';
+
+    return value
+      .toLowerCase()
+      .split(' ')
+      .filter(p => p.trim().length > 0)
+      .map(p => p[0].toUpperCase() + p.slice(1))
+      .join(' ');
+  }
   //! ================== Enrutamiento ==================
 
   redirigir(url: string) {
@@ -165,3 +196,5 @@ mostrarToast(
 
 
 }
+ 
+ 

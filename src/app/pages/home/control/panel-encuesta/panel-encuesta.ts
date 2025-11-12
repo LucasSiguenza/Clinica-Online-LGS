@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { FormEncuesta } from "../../../components/form-encuesta/form-encuesta";
-import { Header } from "../../../components/header/header";
+import { FormEncuesta } from '../../../../components/form-encuesta/form-encuesta';
+import { Header } from '../../../../components/header/header';
 
 @Component({
   selector: 'app-panel-encuesta',

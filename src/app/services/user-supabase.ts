@@ -6,17 +6,17 @@ import { AuthSupabase } from './auth-supabase';
 import { Usuario } from '../models/Usuario';
 import { decode } from 'base64-arraybuffer';
 import { startWith } from 'rxjs';
+import { SupabaseUtils } from './supabase-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserSupabase {
   //? Instanciamos servicios y cliente.
-
-  private supabase = createClient(env.supabaseURL, env.supabaseKey);
+  private sbSvc = inject(SupabaseUtils);
+  private supabase = this.sbSvc.supabase;
   private utilSvc = inject(Utils);
   private auth = inject(AuthSupabase); 
-
   //? Instanciamos signals
 
   listaUsuarios = signal<Usuario[] | null>(null);
@@ -72,7 +72,7 @@ export class UserSupabase {
         id: u.id,
         creacion: u.creacion,
         obra_social: u.obra_social ?? '',
-        especialidad: u.especialidad ?? '',
+        especialidad: this.utilSvc.formatoDesdeSB(u.especialidad) ?? '',
         uid: u.uid, 
         nombre: u.nombre,
         apellido: u.apellido,
@@ -89,9 +89,11 @@ export class UserSupabase {
   
 
   private async actualizarUsuarioBD(usr: Usuario){
+    const listaEsp = await this.sbSvc.adquirirColumna('especialidades', 'nombre') as string[] 
+
     const usrAct ={
       obra_social: usr.obra_social ,
-      especialidad: usr.especialidad ,
+      especialidad: this.utilSvc.formatoSB(usr.especialidad as string) ,
       estado: usr.estado , 
       nombre: usr.nombre ,
       apellido: usr.apellido,
@@ -141,6 +143,7 @@ export class UserSupabase {
   }
 
   private async agregarUsuarioBD(usr: Usuario, contrasenia: string){
+
     const { data: existing, error: checkError } = await this.supabase
       .from('usuarios')
       .select('*')
@@ -159,7 +162,7 @@ export class UserSupabase {
       .insert({
         uid: uid,
         obra_social: usr.obra_social ?? 'no',
-        especialidad: usr.especialidad ?? 'no',
+        especialidad: this.utilSvc.formatoSB(usr.especialidad as string) ?? 'no',
         nombre: usr.nombre ,
         apellido: usr.apellido,
         edad: usr.edad,
@@ -168,9 +171,54 @@ export class UserSupabase {
         correo: usr.correo,
         perfil: usr.perfil
       })
+      .select('id')
       .single();
     if(error) throw new Error('Algo salió mal:', {cause: error.message});
+    
+    const usrDB= { id: data.id}
+    
+    if(usr.isEmpleado!){
+      //^ Buscar ID de la especialidad existente
+      const { data: espExistente, error: errBuscarEsp } = await this.supabase
+        .from('especialidades')
+        .select('id')
+        .eq('nombre', usr.especialidad)
+        .single();
 
+      if (errBuscarEsp && errBuscarEsp.code !== 'PGRST116'){ //? ignora "no rows found"
+        throw new Error('Error al buscar especialidad: ', { cause: errBuscarEsp });}
+
+      let especialidadId = espExistente?.id;
+
+      //^ Si no existe, crear nueva especialidad
+      if (!especialidadId) {
+        const { data: nuevaEsp, error: errNuevaEsp } = await this.supabase
+          .from('especialidades')
+          .insert({ nombre: usr.especialidad })
+          .select('id')
+          .single();
+
+        if (errNuevaEsp)
+          throw new Error('Error al registrar nueva especialidad: ', { cause: errNuevaEsp });
+
+        especialidadId = nuevaEsp.id;
+      }
+
+      //^ Registrar empleado con las FK correctas
+      const empleadoBD = {
+        empleado: usrDB.id,              //? id del usuario recién insertado
+        especialidad: especialidadId,  //? id de especialidad
+      };
+
+      const { error: errEmp } = await this.supabase
+        .from('empleados')
+        .insert(empleadoBD);
+
+      if (errEmp){
+        throw new Error('Error al registrar empleado: ', { cause: errEmp });}
+    }
+    
+    
     if(typeof usr.foto === 'string' ){
       if(usr.foto?.startsWith('file:') || usr.foto?.startsWith('data:')){
         usr.foto = await this.subirFotoUsuario(usr, usr.foto);

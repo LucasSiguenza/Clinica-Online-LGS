@@ -1,32 +1,23 @@
 import { inject, Injectable, OnInit, signal } from '@angular/core';
-import {createClient, SupabaseClient} from '@supabase/supabase-js'
+import {createClient, RealtimeChannel, SupabaseClient} from '@supabase/supabase-js'
 import { env } from '../../enviroments/enviroment';
 import { Usuario } from '../models/Usuario';
+import { TurnosSupabase } from './turnos-supabase';
+import { SupabaseUtils } from './supabase-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthSupabase{
   //? Instanciar Variables y servicios
-  private supabase: SupabaseClient;
+  private sbUtil = inject(SupabaseUtils)
+  supabase= this.sbUtil.supabase;
+  private turnos = inject(TurnosSupabase);
   usuarioActual = signal<Usuario | null>(null);
+  private canal?: RealtimeChannel; 
 
-  
-  constructor(){
-    this.supabase = createClient(env.supabaseURL, env.supabaseKey,{
-      auth:{
-        persistSession: true,
-        autoRefreshToken: true,
-        storage: localStorage,
-      } 
-    });
-
-    this.supabase.auth.getSession()
-    
-  }
 
   //!==================== Métodos de autenticación ====================
-
 
   /**
    * Evalúa si ya existe el usuario en la bd y de no hacerlo lo registra 
@@ -51,6 +42,7 @@ export class AuthSupabase{
     if(this.supabase.auth.getSession() == null) throw new Error('No hay sesión que cerrar'); 
 
     this.supabase.auth.signOut({scope: 'global'});
+    if(this.canal) this.supabase.removeChannel(this.canal); this.canal = undefined;
     console.log('sesión cerrada.')
   }
 
@@ -68,6 +60,8 @@ export class AuthSupabase{
       .single()
 
     if(eDB) throw new Error(`Fallo al obtener el usuario en la base de datos: ${eDB.cause}`, {cause: eDB.message});
+
+    this.canal = this.turnos.iniciarCanal()
 
     this.usuarioActual.set(usuarioDB as Usuario);
 

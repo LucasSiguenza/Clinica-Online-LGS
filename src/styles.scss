@@ -51,24 +51,6 @@ body {
   overflow-y: auto; /* permite scroll si excede */
   position: relative;
   z-index: 1;
-
-  /* --- espaciado visual similar a py-5 de Bootstrap --- */
-  padding-block: 3rem; /* equivalente a py-5 */
-
-  /* --- fondo decorativo --- */
-  background: repeating-conic-gradient(
-        from 30deg,
-        #00000000 0 120deg,
-        #3c3c3c 0 180deg
-      )
-      calc(0.5 * 200px) calc(0.5 * 200px * 0.577),
-    repeating-conic-gradient(
-      from 30deg,
-      #ffb835 0 60deg,
-      #4e4f51 0 120deg,
-      #3c3c3c 0 180deg
-    );
-  background-size: 200px calc(200px * 0.577);
 }
 
 

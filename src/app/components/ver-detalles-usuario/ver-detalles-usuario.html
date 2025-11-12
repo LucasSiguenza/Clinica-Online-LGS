@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-center min-vh-70">
+  <div class="card text-center">
+      <div class="card-content align-items-start ">
+        @if (usuario.foto) {
+             <div class="mt-2">
+                 <app-carrusel-personalizado [fotos]="usuario.foto"></app-carrusel-personalizado>
+             </div>
+             }
+      <h3>{{ usuario.nombre }} {{ usuario.apellido }}</h3>
+
+      <p class="mb-1">Perfil: {{ usuario.perfil | titlecase }}</p>
+
+      <section>
+        <p><strong>Edad:</strong> {{ usuario.edad }}</p>
+        <p><strong>DNI:</strong> {{ usuario.dni }}</p>
+        <p><strong>CUIL:</strong> {{ usuario.cuil }}</p>
+        <p><strong>Correo:</strong> {{ usuario.correo }}</p>
+
+        @if (usuario.perfil === 'cliente') {
+          <p><strong>Obra Social:</strong> {{ usuario.obra_social ?? 'Sin especificar' }}</p>
+        }
+
+        @if (usuario.perfil === 'empleado') {
+          <p><strong>Especialidad:</strong> {{ usuario.especialidad ?? 'Sin especificar' }}</p>
+        }
+
+        @if (usuario.perfil !== 'administrador') {
+          <p><strong>Estado:</strong> {{ usuario.estado ? 'Activo' : 'Inactivo' }}</p>
+        }
+
+        <p><strong>Creación:</strong> {{ usuario.creacion || 'Desconocida' }}</p>
+       
+      </section>
+    </div>
+  </div>
+</div>

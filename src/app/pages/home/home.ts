@@ -2,6 +2,8 @@ import { Component, ElementRef, AfterViewInit, ViewChild, inject } from '@angula
 import { Utils } from '../../services/util';
 import { AuthSupabase } from '../../services/auth-supabase';
 import { Header } from "../../components/header/header";
+import { MatDialog } from '@angular/material/dialog';
+import { FormTurno } from '../../components/form-turno/form-turno';
 
 @Component({
   selector: 'app-home',
@@ -13,17 +15,17 @@ import { Header } from "../../components/header/header";
 export class Home {
   private utilSvc = inject(Utils);
   private auth = inject(AuthSupabase);
-
-  async cerrarSesion(){
-    this.utilSvc.mostrarLoading();
-    try{
-      await this.auth.cerrarSesion();
-      this.utilSvc.redirigir('');
-    } catch(e){
-      console.error(e)
-    } finally{
-      this.utilSvc.ocultarLoading();
-    }
+  private dialogCtrl = inject(MatDialog);
+  
+  async abrirFormTurno() {
+    this.dialogCtrl.open(FormTurno, {
+      width: 'min(90vw, 600px)',
+      height: '80vh',
+      maxHeight: '80vh',
+      panelClass: 'dialog-turno',
+      autoFocus: false,
+    });
   }
+
   
 }

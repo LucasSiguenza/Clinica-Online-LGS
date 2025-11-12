@@ -119,7 +119,7 @@
         <div class="col-12">
           <app-accordion-personalizado 
             #accordion
-            title="Especialidad: {{ form.controls.especialidad.value }}">
+            title="Especialidad: {{ form.controls.especialidad.value | titlecase}}">
             <div class="d-grid gap-2 p-2">
               <button (click)="seleccionarEspecialidad('no'); accordion.toggle()">No seleccionada</button>
               <button (click)="seleccionarEspecialidad('clinico'); accordion.toggle()">Clínico</button>
