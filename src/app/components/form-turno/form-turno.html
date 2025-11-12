@@ -1,27 +1,6 @@
 <div class="turno-wrapper">
   <form [formGroup]="form" class="turno-form">
     <h3 class="Reserv text-center mb-4">Reservar turno</h3>
-
-    <!-- Especialista -->
-    <div class="mb-3">
-      @if (listaEmpleados()?.length) {
-        <label class="form-label">Especialista</label>
-        <input
-          type="text"
-          aria-label="Empleado"
-          placeholder="Seleccione un especialista"
-          class="input form-control bg-secondary text-light border-0"
-          formControlName="empleado"
-          [matAutocomplete]="autoEmpleado"
-          autocomplete="on">
-        <mat-autocomplete #autoEmpleado="matAutocomplete" [displayWith]="mostrarEmpleado">
-          @for (emp of listaEmpleados(); track emp.id) {
-            <mat-option [value]="emp.empleado">{{ emp.empleado | titlecase }}</mat-option>
-          }
-        </mat-autocomplete>
-      }
-    </div>
-
     <!-- Especialidad -->
     <div class="mb-3">
       <label class="form-label">Especialidad</label>
@@ -32,18 +11,41 @@
         formControlName="especialidad"
         [matAutocomplete]="autoEspecialidad"
         autocomplete="off">
-      <mat-autocomplete #autoEspecialidad="matAutocomplete" [displayWith]="mostrarEspecialidad">
+      <mat-autocomplete #autoEspecialidad="matAutocomplete" [displayWith]="displayEspecialidad">
         @for (esp of listaEspecialidad(); track esp) {
           <mat-option [value]="esp">{{ esp | titlecase }}</mat-option>
         }
       </mat-autocomplete>
     </div>
+    @if(this.especialidadSeleccionada()){
+      <!-- Empleado -->
+      <div class="mb-3">
+        @if (filtrarEmpleados().length) {
+          <label class="form-label">Especialista</label>
+          <input
+            type="text"
+            aria-label="Empleado"
+            placeholder="Seleccione un especialista"
+            class="input form-control bg-secondary text-light border-0"
+            formControlName="empleado"
+            [matAutocomplete]="autoEmpleado"
+            autocomplete="on">
+          <mat-autocomplete #autoEmpleado="matAutocomplete" [displayWith]="displayEmpleado">
+            @for (emp of listaEmpleados(); track emp.id) {
+              <mat-option [value]="emp">{{ emp.empleado | titlecase }}</mat-option>
+            }
+          </mat-autocomplete>
+        }
+      </div>
+    }
 
-    <!-- Stepper -->
-    <div class="stepper-wrapper">
-      <mat-vertical-stepper>
-       <mat-step label="Año" class="anio-step">
-        <div class="anio-selector">
+    @if(this.empleadoSeleccionado()){
+
+      <!-- Stepper -->
+      <div class="stepper-wrapper">
+        <mat-vertical-stepper>
+          <mat-step label="Año" class="anio-step">
+            <div class="anio-selector">
           @for (opcion of aniosDisponibles; track opcion) {
             <label class="anio-radio">
               <input
@@ -52,7 +54,7 @@
                 [value]="opcion"
                 [checked]="reunion().anio === opcion"
                 (change)="actualizarReunion('anio', opcion)"
-              />
+                />
               <span>{{ opcion }}</span>
             </label>
           }
@@ -62,8 +64,8 @@
           <button mat-button matStepperNext>Siguiente</button>
         }
       </mat-step>
-
-
+      
+      
         <mat-step class="col-flex" label="Mes">
         <div class="mes-selector">
           <button class="Btn" (click)="modificarMes(false)"><</button>
@@ -91,7 +93,7 @@
               <button mat-button matStepperPrevious>Anterior</button>
               <button mat-button matStepperNext>Siguiente</button>
             }
-        </mat-step>
+          </mat-step>
         <mat-step label="Día disponible">
           @if (listaFechas(); as fechas) {
             <div class="dias-grid">
@@ -100,7 +102,7 @@
                   class="dia-btn"
                   (click)="actualizarReunion('dia', fecha.getDate())"
                   [class.selected]="fecha.getDate() === reunion().dia"
-                >
+                  >
                   {{ fecha | date: 'EEE dd' }}
                 </button>
               }
@@ -108,7 +110,7 @@
           } @else {
             <p>No hay días disponibles.</p>
           }
-
+          
           <div class="stepper-actions">
             <button mat-button matStepperPrevious>Anterior</button>
             <button
@@ -155,7 +157,7 @@
 
           <div class="stepper-actions">
             <button mat-button matStepperPrevious>Anterior</button>
-            <button mat-button (click)="confirmar()">Confirmar</button>
+            <button mat-button matStepperNext>Siguiente</button>
           </div>
         </mat-step>
       </mat-vertical-stepper>
@@ -164,5 +166,6 @@
     <div class="d-grid mt-3">
       <button type="submit" (click)="confirmar()" class="Btn">Confirmar turno</button>
     </div>
+  }
   </form>
 </div>

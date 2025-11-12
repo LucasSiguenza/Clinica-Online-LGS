@@ -67,7 +67,9 @@ export class TurnosSupabase {
           .map(async (item:any): Promise<Empleado> => ({
             id: item.id, //~ Se le asigna su id
             empleado: await this.sbUtil.adquirirCelda('usuarios', 'apellido','id',item.empleado), //~ Se busca en la tabla usuarios su nombre
-            especialidad: await this.sbUtil.adquirirCelda('especialidades','nombre','id',item.especialidad) //~ Lo mismo en la tabla especialidad
+            especialidad: await this.sbUtil.adquirirCelda('especialidades','nombre','id',item.especialidad), //~ Lo mismo en la tabla especialidad
+            idEmpleado: item.empleado,
+            idEspecialidad: item.especialidad
           }
         )));
         
