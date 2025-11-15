@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Utils } from '../../services/util';
 import { AuthSupabase } from '../../services/auth-supabase';
+import { UserSupabase } from '../../services/user-supabase';
+import { MatDialog } from '@angular/material/dialog';
+import { FormularioAltaUsuario } from '../formulario-alta-usuario/formulario-alta-usuario';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +15,8 @@ export class Header {
   //! ====================== Variables y servicios ======================
   protected utilSvc = inject(Utils);
   protected authSvc = inject(AuthSupabase);
+  private userSvc = inject(UserSupabase);
+  private matDialog = inject(MatDialog)
   menuAbierto = false;
 
 
@@ -35,7 +40,7 @@ export class Header {
   async irPanelUsuarios(){
    try{
      this.utilSvc.mostrarLoading();
-     await new Promise(r => setTimeout(r, 1500)); // espera 1.5s reales
+     await new Promise(r => setTimeout(r, 500)); // espera 1.5s reales
      this.utilSvc.redirigir('/home/control/panel-usuarios');
      this.utilSvc.ocultarLoading();
    }
@@ -78,6 +83,16 @@ export class Header {
     }
   }
 
-
-
+  async irMiPerfil() {
+    this.userSvc.setUsuarioSeleccionado(this.authSvc.usuarioActual()!);
+      this.matDialog.open(FormularioAltaUsuario, {
+          width: '100%',
+          height: '100%',
+          maxWidth: '100vw',
+          maxHeight: '100vh',
+          panelClass: 'full-screen-dialog',
+          disableClose: true,
+          autoFocus: false,
+        });
+      }
 }

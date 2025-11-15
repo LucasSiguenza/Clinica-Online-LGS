@@ -174,6 +174,7 @@ export class FormularioAltaUsuario {
       else{
         const usuarioEdit: Usuario ={...this.userSvc.getUsuarioSeleccionado(), ...usuario}
         await this.userSvc.actualizarUsuario(usuarioEdit);
+        this.userSvc.deseleccionarUsuario();
       }
     } catch(e){
       console.error(JSON.stringify(e));

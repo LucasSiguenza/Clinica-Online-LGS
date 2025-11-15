@@ -27,9 +27,9 @@ export class TurnosSupabase {
     .on('postgres_changes',
       {event: '*', schema: 'public', table: 'turnos'},
       (registro) =>{
-        console.log(`Evento: ${registro}`)
-        console.log(`Nuevo suceso: ${registro.new}`)
-        console.log(`Suceso anterior: ${registro.old}`)
+        console.log(`Evento: ${JSON.stringify(registro)}`)
+        console.log(`Nuevo suceso: ${JSON.stringify(registro.new)}`)
+        console.log(`Suceso anterior: ${JSON.stringify(registro.old)}`)
       }
     )
     .subscribe()
@@ -93,7 +93,46 @@ export class TurnosSupabase {
   private async listarTurnosDB(){
     let listaDB: Turno[] = []
     try{
-      listaDB = await this.sbUtil.listarTodos<Turno>('turnos') as Turno[];
+      listaDB = await Promise.all(
+      (await this.sbUtil.listarTodos('turnos'))
+        .map(async (t: any): Promise<Turno> => {
+
+          // === Obtener fila de empleados ===
+          const filaEmpleado = await this.sbUtil.adquirirFila<{ empleado: number }>(
+            'empleados',
+            'id',
+            t.empleado
+          );
+
+          const idUsuarioEmpleado = filaEmpleado?.empleado ?? null;
+
+          // === Obtener nombre y apellido del empleado ===
+          let nombreEmpleado = 'Sin asignar';
+          if (idUsuarioEmpleado) {
+            const nombre = await this.sbUtil.adquirirCelda<string>('usuarios', 'nombre', 'id', String(idUsuarioEmpleado));
+            const apellido = await this.sbUtil.adquirirCelda<string>('usuarios', 'apellido', 'id', String(idUsuarioEmpleado));
+            nombreEmpleado = `${nombre} ${apellido}`;
+          }
+
+          // === Obtener nombre del paciente ===
+          const nombrePaciente = `${await this.sbUtil.adquirirCelda('usuarios','nombre','id', t.paciente)} ${await this.sbUtil.adquirirCelda('usuarios','apellido','id', t.paciente)}`;
+
+          return {
+            id: t.id,
+            duracion: t.duracion,
+            creado: t.creado,
+            estado: t.estado,
+            empleado: t.empleado,
+            especialidad: t.especialidad,
+            fecha: t.fecha,
+            paciente: t.paciente,
+            resenia: (await this.sbUtil.adquirirCelda('resenias','comentario','turno', t.id)) ?? 'Sin comentarios',
+            nombreEmpleado,
+            nombrePaciente,
+            nombreEspecialidad: await this.sbUtil.adquirirCelda('especialidades', 'nombre', 'id', t.especialidad)
+          }
+        })
+    );
     } catch(e){
       console.error(`Hubo un error al cargar listado en: ${(e as Error).message}`)
     } 

@@ -46,9 +46,10 @@ export class SupabaseUtils {
   
   async adquirirFila<T>(tabla: string, columnaIdent: string, identificador: string): Promise<T | null>{
     const {data, error} = await this.supabase
-    .from(tabla)
-    .select('*')
-    .eq(columnaIdent,identificador)
+      .from(tabla)
+      .select('*')
+      .eq(columnaIdent,identificador)
+      .maybeSingle();
     
     if(error) throw new Error(`Error al buscar: ${error.message}`);
     
@@ -60,13 +61,15 @@ export class SupabaseUtils {
       .from(tabla)
       .select(columnaReturn)
       .eq(columnaIdent,identificador)
-      .single();
+      .maybeSingle();
 
-    if(error) throw new Error(`Error al buscar: ${error.message}`);
+    if(error) throw new Error(`Error al buscar en ${tabla}, ${columnaIdent}, ${identificador}: ${(error as Error).message}`);
+    
+    if(!data) return null as T
 
-  const registro = data as unknown as Record<string, unknown >;
+    const registro = data as unknown as Record<string, unknown >;
 
-  return (registro[columnaReturn] as T) ?? ('' as T);  
+    return (registro[columnaReturn] as T) ?? ('' as T);  
 }
 
   //~ ======================= Métodos Insert 

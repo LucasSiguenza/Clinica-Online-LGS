@@ -17,8 +17,8 @@ export class UserSupabase {
   private supabase = this.sbSvc.supabase;
   private utilSvc = inject(Utils);
   private auth = inject(AuthSupabase); 
+  
   //? Instanciamos signals
-
   listaUsuarios = signal<Usuario[] | null>(null);
   private usuarioSeleccionado = signal<Usuario | null>(null);
 
