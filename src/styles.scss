@@ -184,6 +184,7 @@ h1 {
   }
 
   .text {
+    color: white;
     position: relative;
     z-index: 2;
   }
@@ -231,26 +232,6 @@ h1 {
       .bg-inner {
         top: 100%;
       }
-    }
-  }
-}
-
-.credits {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  padding: 0.5rem;
-  width: 100%;
-  z-index: 111;
-
-  a {
-    opacity: 0.6;
-    color: #fff;
-    font-size: 0.75rem;
-    text-decoration: none;
-
-    &:hover {
-      opacity: 1;
     }
   }
 }

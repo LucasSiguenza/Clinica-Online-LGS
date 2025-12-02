@@ -6,7 +6,6 @@ import { SelectorDiaSemana } from '../../../directivas/selector-dia-semana';
   imports: [],
   hostDirectives: [{
     directive: SelectorDiaSemana,
-    inputs: ['mes', 'anio'],      //! Heredados de la directiva y aplicados al componente
     outputs: ['cambios']          //! Retorno de fechas
   }],
   templateUrl: './diasamana-selector-radios.html',

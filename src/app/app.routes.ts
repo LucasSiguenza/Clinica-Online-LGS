@@ -6,14 +6,16 @@ import { PanelDeUsuario } from './pages/home/control/panel-de-usuario/panel-de-u
 import { PanelDeTurnos } from './pages/home/control/panel-de-turnos/panel-de-turnos';
 import { PanelEncuesta } from './pages/home/control/panel-encuesta/panel-encuesta';
 import { FormTurno } from './components/form-turno/form-turno';
+import { sesionUsuarioGuard } from './guards/sesion-usuario-guard';
+import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'auth/login',  pathMatch: 'full' },
     { path: 'auth/register', component: Register},
-    { path: 'auth/login', component: Login },
-    { path: 'home', component: Home },
-    { path: 'home/control/panel-usuarios', component:PanelDeUsuario},
-    { path: 'home/control/panel-turnos', component:PanelDeTurnos},
-    { path: 'home/control/panel-encuestas', component:PanelEncuesta},
-    { path: 'test', component:FormTurno}
+    { path: 'auth/login', component: Login, canActivate: [sesionUsuarioGuard] },
+    { path: 'home', component: Home, canActivate: [sesionUsuarioGuard] },
+    { path: 'home/control/panel-usuarios', component:PanelDeUsuario, canActivate: [sesionUsuarioGuard,adminGuard]},
+    { path: 'home/control/panel-turnos', component:PanelDeTurnos, canActivate: [sesionUsuarioGuard]},
+    { path: 'home/control/panel-encuestas', component:PanelEncuesta, canActivate: [sesionUsuarioGuard]},
+    { path: 'test', component:FormTurno, canActivate: [sesionUsuarioGuard]}
 ];

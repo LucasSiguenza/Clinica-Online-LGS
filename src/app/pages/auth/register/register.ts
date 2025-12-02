@@ -6,6 +6,7 @@ import { AccordionPersonalizado } from "../../../components/elementos/accordion-
 import { BotonPersonalizado } from "../../../components/elementos/boton-personalizado/boton-personalizado";
 import { Usuario } from '../../../models/Usuario';
 import { UserSupabase } from '../../../services/user-supabase';
+import { AuthSupabase } from '../../../services/auth-supabase';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +17,7 @@ import { UserSupabase } from '../../../services/user-supabase';
 })
 export class Register {
 
+  sbCliente = inject(AuthSupabase);
   private utilsSvc = inject(Utils);
   private userSvc = inject(UserSupabase);
   protected placeHolder = 'https://hdpijtoomoargexhddxr.supabase.co/storage/v1/object/public/foto-usuario/user-placeholder.png'
@@ -41,33 +43,38 @@ export class Register {
     if(num === '1') {
       this.registroForm.patchValue({foto1: String(foto)});
       this.fotoPreviewUno.set(String(foto));
-      console.log(foto);
     }
     else {
       this.registroForm.patchValue({foto2: String(foto)});
       this.fotoPreviewDos.set(String(foto)) ;
-      console.log(foto);
     }
   }
+
+
 
   async registro(){
     if(this.registroForm.invalid){
       this.utilsSvc.mostrarToast('Completa correctamente el formulario.', 'error');
       return
     }
+
+
     var contra = this.registroForm.controls.contrasenia.value;
     const nuevo: Usuario = {
       nombre: this.registroForm.controls.nombre.value as string,
       apellido: this.registroForm.controls.apellido.value as string,
       obra_social: this.registroForm.controls.obraSocial.value as string,
       edad: this.registroForm.controls.edad.value as string,
+      especialidad: 'no',
       dni: this.registroForm.controls.dni.value as string,
+      estado: false,
       cuil: this.registroForm.controls.cuil.value as string,
       correo: this.registroForm.controls.correo.value as string,
       perfil: 'cliente',
       foto: [this.registroForm.controls.foto1.value, this.registroForm.controls.foto2.value]as string[]
     }
     try{  
+      console.log(JSON.stringify(nuevo));
       this.utilsSvc.mostrarLoading();
       
       await this.userSvc.crearUsuario(nuevo, contra as string)

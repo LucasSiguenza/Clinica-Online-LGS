@@ -14,7 +14,7 @@ import { FormTurno } from '../../components/form-turno/form-turno';
 })
 export class Home {
   private utilSvc = inject(Utils);
-  private auth = inject(AuthSupabase);
+  protected auth = inject(AuthSupabase);
   private dialogCtrl = inject(MatDialog);
   
   async abrirFormTurno() {

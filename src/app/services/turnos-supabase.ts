@@ -88,6 +88,20 @@ export class TurnosSupabase {
       return listaReturn;
     }
 
+
+    async listarTurnosOcupados():Promise<Date[]>{
+      let listaFechas: Date[] =[]
+      try{
+         listaFechas =
+        (await this.sbUtil.adquirirColumna<{fecha: string}>('turnos', 'fecha'))
+        .map(f => new Date(f.fecha));
+        
+      } catch(e){
+        console.error(e);
+      }
+      return listaFechas 
+
+    }
   //! ======================= Métodos privados =======================
 
   private async listarTurnosDB(){

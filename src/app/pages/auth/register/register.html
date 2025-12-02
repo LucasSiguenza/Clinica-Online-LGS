@@ -13,7 +13,9 @@
       [form]="registroForm" 
       control="dni"
       tipoInput="number"
-      placeHolder="DNI">
+      placeHolder="DNI"
+      maxlenght = 11
+      mensajeAdicional='Rango de caracteres aceptados: 7-8'>
     </app-input-personalizado>
   </div>
   <!--//^ =========== CUIL ===========-->
@@ -22,7 +24,8 @@
       [form]="registroForm" 
       control="cuil"
       tipoInput="number"
-      placeHolder="CUIL">
+      placeHolder="CUIL"
+      mensajeAdicional='Rango de caracteres aceptados: 10-11'>
     </app-input-personalizado>
   </div>
 </div>
@@ -32,7 +35,8 @@
     [form]="registroForm" 
     control="nombre"
     tipoInput="text"
-    placeHolder="Ingrese su nombre">
+    placeHolder="Ingrese su nombre"
+    mensajeAdicional="Debe poseer más de 3 caracteres">
   </app-input-personalizado>
 
   <!--//^ =========== Apellido ===========-->
@@ -40,15 +44,17 @@
     [form]="registroForm" 
     control="apellido"
     tipoInput="text"
-    placeHolder="Ingrese su apellido">
+    placeHolder="Ingrese su apellido"
+    mensajeAdicional="Debe poseer más de 3 caracteres">
   </app-input-personalizado>
 
   <!--//^ =========== Edad ===========-->    
   <app-input-personalizado 
   [form]="registroForm" 
   control="edad"
-    tipoInput="number"
-    placeHolder="Edad">
+  tipoInput="number"
+  placeHolder="Edad"
+  mensajeAdicional="Debe ser mayor de 13 años">
   </app-input-personalizado> 
   
   <!--//^ =========== Obra social ===========-->
@@ -73,7 +79,8 @@
   [form]="registroForm" 
   control="contrasenia"
   tipoInput="password"
-  placeHolder="Ingrese su contraseña"></app-input-personalizado>
+  placeHolder="Ingrese su contraseña"
+  mensajeAdicional="Debe ser mayor a 5 caracteres"></app-input-personalizado>
   
   <!--//^ =========== Fotos ===========-->
   <div class="d-flex gap-3">

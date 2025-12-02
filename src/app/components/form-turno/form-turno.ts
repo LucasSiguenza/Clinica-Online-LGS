@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject, Injector, signal } from '@angular/core';
+import { Component, computed, effect, inject, Injector, signal, ViewChild } from '@angular/core';
 import { TurnosSupabase } from '../../services/turnos-supabase';
 import { Utils } from '../../services/util';
-import {MatStepperModule} from '@angular/material/stepper';
+import {MatStepper, MatStepperModule} from '@angular/material/stepper';
 import {MatTimepickerModule, MatTimepickerOption} from '@angular/material/timepicker';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { DialogRef } from '@angular/cdk/dialog';
@@ -18,11 +18,11 @@ import { AsyncPipe } from '@angular/common';
 import { MesPipePipe } from '../../pipes/mes-pipe-pipe';
 import { DiasamanaSelectorRadios } from "../elementos/diasamana-selector-radios/diasamana-selector-radios";
 import { Turno } from '../../models/Turno';
+import { FechaFormatoPipe } from '../../pipes/fecha-formato-pipe';
+import { InputTurnoComponent } from "../elementos/input-turno/input-turno";
 
 type Reunion = {
-  anio: number | null;
-  mes: number | null;
-  dia: number | null;
+  dia: Date | null;
   hora: string | null;
 };
 
@@ -36,8 +36,9 @@ type Reunion = {
     MatListModule,
     MatStepperModule,
     DatePipe,
-    MesPipePipe,
-    TitleCasePipe, DiasamanaSelectorRadios],
+    TitleCasePipe,
+    DiasamanaSelectorRadios,
+    FechaFormatoPipe, InputTurnoComponent],
   providers: [TitleCasePipe], 
   templateUrl: './form-turno.html',
   styleUrl: './form-turno.scss'
@@ -47,49 +48,75 @@ export class FormTurno {
   
   //^ ==================== Servicios y variables
   
-  private turnoSvc = inject(TurnosSupabase);
+  protected turnoSvc = inject(TurnosSupabase);
+  private sbSvc = inject(SupabaseUtils);
   private auth = inject(AuthSupabase);
   private utilSvc = inject(Utils);
-  private sbSvc = inject(SupabaseUtils);
   private dialogCtrl = inject(DialogRef);
   protected usuarioActual = this.auth.usuarioActual();
-  
-  
   protected isNuevo = this.turnoSvc.turnoSeleccionado() === null
+  @ViewChild(MatStepper) stepper?: MatStepper;
+  protected isEditando = !this.isNuevo && !!this.usuarioActual && this.usuarioActual.perfil !== 'cliente'; 
+  
+  
   //^ ==================== Signals
+  protected fechaTurno = signal<Date | null>(null);
   protected empleadoSeleccionado = signal<Empleado | null>(null);
   protected especialidadSeleccionada = signal<string | null>(null);
-  protected listaEmpleados= signal<Empleado[] | null>([]);
-  protected listaEspecialidad= signal<string[] | null>([]);
+  protected reunion = signal<Reunion>({
+      dia: null,
+      hora: null
+    });
   protected paciente = signal<string | null>(null);
+  protected isTurnoSeleccionado = signal<boolean>(true);
+  protected turnoSeleccionado = this.turnoSvc.turnoSeleccionado();
+  //~ Listas
+  private listaDiasOcupados: Date[] = [];
+  protected listaFechas = signal<Date[] | null>(null)
+  protected listaEspecialidad= signal<string[] | null>([]);
+  protected listaEmpleados= signal<Empleado[] | null>([]);
   protected listaHorarios = computed<Date[]>(() => {
-    const { anio, mes, dia } = this.reunion();
-    if (!anio || !mes || !dia) return [];
+    
+    const listaOcupados = this.listaDiasOcupados;
+    const selected = this.reunion().dia;
+    if (!selected) return [];
+
     
     const inicio = 8 * 60;
     const fin = 19 * 60;
     const intervalo = 30;
-
     const lista: Date[] = [];
     
     for (let t = inicio; t <= fin; t += intervalo) {
       const hora = Math.floor(t / 60);
       const minuto = t % 60;
-      const fecha = new Date(anio, mes - 1, dia, hora, minuto);
-      const ocupado = this.ocupados().some(o => o.getTime() === fecha.getTime());
-      if (!ocupado) lista.push(fecha);
-    }
 
-    return lista;
+      const fecha = new Date(
+        selected.getFullYear(),
+        selected.getMonth(),
+        selected.getDate(),
+        hora,
+        minuto,
+        0,
+        0
+      );
+      const fechaNorm = this.utilSvc.normalizarAMinutos(fecha);
+      const ocupado = (this.listaDiasOcupados ?? []).some(o =>
+        this.utilSvc.normalizarAMinutos(o).getTime() === fechaNorm.getTime()
+      );
+
+      if (!ocupado) lista.push(fechaNorm);
+  }
+
+  return lista;  });
+  protected empleadosFiltrados = computed(() => {
+    const esp = this.especialidadSeleccionada();
+    console.log(esp);
+    if (!esp) return [];
+    console.log(JSON.stringify(this.listaEmpleados()!.filter(e => e.especialidad === esp)));
+    return this.listaEmpleados()!.filter(e => e.especialidad === esp);
   });
 
-  protected reunion = signal<Reunion>({
-    anio: null,
-    mes: null,
-    dia: null,
-    hora: null
-  });
-  protected listaFechas = signal<Date[] | null>(null)
   
   //^ ==================== Form
   
@@ -102,37 +129,38 @@ export class FormTurno {
   })
   r: any;
   
-  //^ ==================== Listas
   //? Temporal
-  aniosDisponibles = [2025, 2026];
-  ocupados = signal<Date[]>([
-    new Date(2025, 10, 15, 10, 0),
-    new Date(2025, 10, 15, 15, 30)
-  ]);
   private listados!: any[];
 
 
   constructor() {      
     //? Se define los parámetros reactivos para que reunión se actualice en cada cambio
     //? Y defina el valor del parámetro fecha al completar el registro.  
-    effect(
-      () => {
-        const datos = this.reunion();
-        if(!datos) return '';
-        
-        const {anio, mes, dia, hora } = datos;
-        
-        if (anio && mes && dia && hora) {
-          const [h, m] = hora.split(':').map(Number);
-          const fechaCompleta = new Date(
-            anio, // o podrías usar un signal de anio si lo pedís en el paso anterior
-            mes - 1,                  // Date usa meses 0–11
-            Number(dia),              // convierte el string a número
-            h, m, 0, 0 );
-            
-            return this.form.controls['fecha'].setValue(fechaCompleta);
-          }
-    });
+     effect(() => {
+        const { dia, hora } = this.reunion();
+
+        //~ Si no hay día, limpiamos el control
+        if (!dia) {
+          this.form.controls['fecha'].setValue(null);
+          return;
+        }
+
+        //^ Clonamos la fecha seleccionada para no mutar el original
+        const fechaBase = new Date(dia);
+        fechaBase.setHours(0, 0, 0, 0);
+
+        if (!hora) {
+          //~ Si solo hay día, rompemos la actualización
+          return;
+        }
+
+        //^ Si hay hora, la aplicamos sobre la fecha clonada
+        const [h, m] = hora.split(':').map(Number);
+        const fechaCompleta = new Date(fechaBase);
+        fechaCompleta.setHours(h, m, 0, 0);
+
+        this.form.controls['fecha'].setValue(fechaCompleta);
+      });
   }
 
   async ngOnInit(){
@@ -140,22 +168,42 @@ export class FormTurno {
     this.listados = await this.turnoSvc.recuperarListados();
     this.listaEmpleados.set(this.listados[0]);
     this.listaEspecialidad.set(this.listados[1]);
-    this.reunion.set({anio : null ,mes : 1, dia: null, hora: null})
-    if(this.usuarioActual != null && this.usuarioActual.perfil === 'cliente') this.paciente.set(this.usuarioActual.id!);
+    if(this.isNuevo){
+      this.reunion.set({dia: null, hora: null})
+      if(this.usuarioActual!.perfil !== 'empleado') this.paciente.set(this.usuarioActual!.id!);
+     } 
+    else{
+      this.form.patchValue({
+        duracion: this.turnoSvc.turnoSeleccionado()?.duracion,
+        empleado: this.listaEmpleados()?.find(emp => emp.idEmpleado === this.turnoSvc.turnoSeleccionado()?.empleado),
+        fecha: new Date(this.turnoSvc.turnoSeleccionado()?.fecha!),
+        especialidad: await this.sbSvc.adquirirCelda('especialidades','nombre','id',String(this.turnoSvc.turnoSeleccionado()?.especialidad)),
+        paciente: this.turnoSvc.turnoSeleccionado()?.paciente,
+      });
+      const f = new Date(this.turnoSvc.turnoSeleccionado()!.fecha);
+      this.fechaTurno.set(f);
+      this.listaDiasOcupados = await this.turnoSvc.listarTurnosOcupados();
+      console.log('Valores agregados');
+     }
+
     this.utilSvc.ocultarLoading();
   }
 
-  filtrarEmpleados():Empleado[]{
-    if(this.especialidadSeleccionada() === null) return [];
-    return this.listaEmpleados()!.filter(m => m.especialidad === this.especialidadSeleccionada());
-  }
   //! ==================== Métodos auxiliares ====================
+
   actualizarReunion<K extends keyof Reunion>(campo: K, valor: Reunion[K]) {
     this.reunion.update(r => ({ ...r, [campo]: valor }) as typeof r);
-    console.log(JSON.stringify(this.reunion()))
-    console.log(JSON.stringify(this.form.controls.fecha.value))
+
+    if (campo === 'hora') this.modificarStepper();
   }
 
+  actualizarDiasSegunSemana(fechas: Date[]) {
+    this.listaFechas.set(fechas);
+  }
+
+  modificarStepper() {
+    this.isTurnoSeleccionado.set(!this.isTurnoSeleccionado());
+  }
    protected displayEmpleado = (emp: Empleado): string => {
     this.empleadoSeleccionado.set(emp) 
     return emp ? emp.empleado.toLowerCase()
@@ -166,29 +214,24 @@ export class FormTurno {
   }
 
   protected displayEspecialidad = (esp: string | null): string => {
-  if (!esp) return '';
-  this.especialidadSeleccionada.set(esp);
-  console.log(this.especialidadSeleccionada());
-  return esp
-    .toLowerCase()
-    .split(' ')
-    .filter(p => p.trim().length > 0)
-    .map(p => p[0].toUpperCase() + p.slice(1))
-    .join(' ');
-};
+    if (!esp) return '';
+    this.especialidadSeleccionada.set(esp);
+    console.log(this.especialidadSeleccionada());
+    return esp
+      .toLowerCase()
+      .split(' ')
+      .filter(p => p.trim().length > 0)
+      .map(p => p[0].toUpperCase() + p.slice(1))
+      .join(' ');
+    };
 
-  //! ==================== Métodos de botones ====================
-  modificarMes(suma: boolean){
-    console.log(this.reunion().mes);
-    if(suma && this.reunion().mes! < 12) this.actualizarReunion('mes', (this.reunion().mes! + 1))
-    if(suma) return;
-    else {
-      if(this.reunion().mes! > 1) 
-        {
-          this.actualizarReunion('mes', (this.reunion().mes! - 1))
-        }
-      }
+  protected actualizarTurno(act: Date){
+    console.log(JSON.stringify(act));
+    this.form.patchValue({
+      fecha: act
+    })
   }
+  //! ==================== Métodos de botones ====================
   
 
   async confirmar(){
@@ -207,9 +250,25 @@ export class FormTurno {
     }
 
     try{
-      console.log('Turno creado')
-      this.turnoSvc.agregarTurno(turnoForm);
-      console.log("¡Turno agendado!")
+      if(this.isNuevo){
+        await this.turnoSvc.agregarTurno(turnoForm);
+        this.utilSvc.mostrarAlert({
+          text: `¡Turno agendado!`,
+          title: '¡Felicidades!',
+          icon: 'success',
+          theme: 'dark'
+        });
+      } else{
+        await this.turnoSvc.actualizarTurno(turnoForm);
+        this.utilSvc.mostrarAlert({
+          text: `¡Turno actuallizado!`,
+          title: '¡Felicidades!',
+          icon: 'success',
+          theme: 'dark'
+        });
+        this.turnoSvc.turnoSeleccionado.set(null);
+      }
+ 
     }catch(e){
       this.utilSvc.mostrarAlert({
         text: `Causa: ${(e as Error).cause}\nMensaje: ${(e as Error).message}`,

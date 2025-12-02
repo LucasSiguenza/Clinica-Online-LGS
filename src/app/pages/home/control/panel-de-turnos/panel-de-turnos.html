@@ -1,9 +1,16 @@
 <app-header></app-header>
-
+<!-- Botón PDF -->
+<div class="pdf-btn-container">
+  <app-boton-personalizado
+    texto="Descargar historial como PDF"
+    (click)="pdfHist.exportPdf()"
+  ></app-boton-personalizado>
+</div>
 <div class="main-container d-flex flex-column justify-content-between align-items-center text-center">
 
   <!-- Contenido principal -->
   <div class="content-wrapper d-flex flex-column justify-content-center align-items-center flex-grow-1">
+    
 
     <div class="pagination-controls mb-3 d-flex align-items-center gap-3">
 
@@ -14,24 +21,36 @@
 
       <!-- Cards -->
       <div class="cards-wrapper row justify-content-center g-4 mx-3">
+        <div class="cards-wrapper row justify-content-center g-4 mx-3"
+          appGenPdfHistTurnos
+          [turnosPdf]="this.listaTurnos()"
+          #pdfHist="appGenPdfHistTurnos">
         @for (t of listaPaginada; track t.id) {
           <div class="col-flex p-4">
             <div class="card turno-card text-center shadow-sm p-3">
 
-              <h5 class="fw-bold mb-2">Turno N°: {{ t.id }}</h5>
+              <h5 class="fw-bold mb-2 text-primary-emphasis">Turno N°: {{ t.id }}</h5>
 
-              <p class="m-0"><strong>Fecha:</strong> {{ t.fecha | fechaHorario}}</p>
-              <p class="m-0"><strong>Especialidad:</strong> {{ t.nombreEspecialidad | titlecase}}</p>
-              <p class="m-0"><strong>Empleado:</strong> {{ t.nombreEmpleado | titlecase}}</p>
+              <p class="m-1"><strong>Fecha:</strong> {{ t.fecha | fechaHorario}}</p>
+              <p class="m-1"><strong>Especialidad:</strong> {{ t.nombreEspecialidad | titlecase}}</p>
+              <p class="m-1"><strong>Empleado:</strong> {{ t.nombreEmpleado | titlecase}}</p>
 
               @if (t.paciente) {
-                <p class="m-0"><strong>Paciente:</strong> {{ t.nombrePaciente | titlecase}}</p>
+                <p class="m-1"><strong>Paciente:</strong> {{ t.nombrePaciente | titlecase}}</p>
               }
 
-              <p class="m-0"><strong>Duración:</strong> {{ t.duracion }} minutos</p>
-
-              @if (t.estado) {
-                <p class="m-0 text-primary-emphasis"><strong>Estado:</strong> {{ t.estado | titlecase}}</p>
+              <p class="m-1"><strong>Duración:</strong> {{ t.duracion }} minutos</p>
+                <p class="m-1 text-info-emphasis"><strong>Estado:</strong> {{ t.estado | titlecase}}</p>
+              <br>
+              @if(usuarioActual.perfil === 'empleado'){
+                <div class="btn-esp-wrapper">
+                  <button (click)="abrirEdicion(t)" class="btn-esp">
+                    <span class="label">Editar</span>
+                    <span class="gradient-container">
+                      <span class="gradient"></span>
+                    </span>
+                  </button>
+                </div>
               }
 
             </div>

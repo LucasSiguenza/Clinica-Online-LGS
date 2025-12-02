@@ -1,6 +1,8 @@
 <div class="turno-wrapper">
   <form [formGroup]="form" class="turno-form">
+    
     <h3 class="Reserv text-center mb-4">Reservar turno</h3>
+  @if(isNuevo){
     <!-- Especialidad -->
     <div class="mb-3">
       <label class="form-label">Especialidad</label>
@@ -17,10 +19,11 @@
         }
       </mat-autocomplete>
     </div>
-    @if(this.especialidadSeleccionada()){
+    
+    @if(especialidadSeleccionada()){
       <!-- Empleado -->
       <div class="mb-3">
-        @if (filtrarEmpleados().length) {
+        @if (empleadosFiltrados().length) {
           <label class="form-label">Especialista</label>
           <input
             type="text"
@@ -31,141 +34,111 @@
             [matAutocomplete]="autoEmpleado"
             autocomplete="on">
           <mat-autocomplete #autoEmpleado="matAutocomplete" [displayWith]="displayEmpleado">
-            @for (emp of listaEmpleados(); track emp.id) {
+            @for (emp of empleadosFiltrados(); track emp.id) {
               <mat-option [value]="emp">{{ emp.empleado | titlecase }}</mat-option>
             }
           </mat-autocomplete>
         }
       </div>
     }
+    @if(empleadoSeleccionado()){
 
-    @if(this.empleadoSeleccionado()){
+     @if(isTurnoSeleccionado()){
+        <!-- Stepper -->
+        <div class="stepper-wrapper">
+          <mat-vertical-stepper>
 
-      <!-- Stepper -->
-      <div class="stepper-wrapper">
-        <mat-vertical-stepper>
-          <mat-step label="Año" class="anio-step">
-            <div class="anio-selector">
-          @for (opcion of aniosDisponibles; track opcion) {
-            <label class="anio-radio">
-              <input
-                type="radio"
-                name="anio"
-                [value]="opcion"
-                [checked]="reunion().anio === opcion"
-                (change)="actualizarReunion('anio', opcion)"
-                />
-              <span>{{ opcion }}</span>
-            </label>
-          }
-        </div>
+        <mat-step label="Día">
+          <app-diasamana-selector-radios
+            (cambios)="actualizarDiasSegunSemana($event)"
+            
+          ></app-diasamana-selector-radios>
 
-        @if (reunion().anio) {
-          <button mat-button matStepperNext>Siguiente</button>
-        }
-      </mat-step>
-      
-      
-        <mat-step class="col-flex" label="Mes">
-        <div class="mes-selector">
-          <button class="Btn" (click)="modificarMes(false)"><</button>
-          <div class="mes-valor">
-            {{ this.reunion().mes | mesPipe }}
+            <button mat-button matStepperPrevious>Anterior</button>
+            <button mat-button matStepperNext>Siguiente</button>
+        </mat-step>
+
+          <mat-step label="Día disponible">
+
+
+        @if (listaFechas(); as fechas) {
+          <div class="dias-grid">
+            @for (fecha of fechas; track fecha.getTime()) {
+              <button
+                class="dia-btn"
+                [class.seleccionado]="reunion().dia?.getTime() === fecha.getTime()"
+                (click)="actualizarReunion('dia', fecha)"
+              >
+                {{ fecha | fechaFormato }}
+              </button>
+            }
           </div>
-          <button class="Btn" (click)="modificarMes(true)">></button>
-        </div>
-
+        } @else {
+          <p>No hay días disponibles.</p>
+        }
 
         <div class="stepper-actions">
           <button mat-button matStepperPrevious>Anterior</button>
-          <button mat-button matStepperNext>Siguiente</button>
+          <button mat-button matStepperNext [disabled]="!reunion().dia?.getTime()">Siguiente</button>
         </div>
       </mat-step>
+        <mat-step label="Hora">
+        @if (listaHorarios().length > 0) {
+          <div class="horarios-list">
 
-        <mat-step class="stepper-wrapper" label="Día">
-          <app-diasamana-selector-radios
-            [anio]="reunion().anio!"
-            [mes]="reunion().mes!"
-            (cambios)="listaFechas.set($event)"
-            (dia)="actualizarReunion('dia', $event)"
-            ></app-diasamana-selector-radios>
-            @if(reunion().dia){
-              <button mat-button matStepperPrevious>Anterior</button>
-              <button mat-button matStepperNext>Siguiente</button>
-            }
-          </mat-step>
-        <mat-step label="Día disponible">
-          @if (listaFechas(); as fechas) {
-            <div class="dias-grid">
-              @for (fecha of fechas; track fecha) {
+            <mat-divider>Mañana</mat-divider>
+            @for (hora of listaHorarios(); track hora) {
+              @if (hora.getHours() < 12) {
                 <button
-                  class="dia-btn"
-                  (click)="actualizarReunion('dia', fecha.getDate())"
-                  [class.selected]="fecha.getDate() === reunion().dia"
-                  >
-                  {{ fecha | date: 'EEE dd' }}
+                  class="hora-btn"
+                  (click)="actualizarReunion('hora', hora.toTimeString().slice(0,5))"
+                  [class.selected]="hora.toTimeString().slice(0,5) === reunion().hora"
+                >
+                  {{ hora | date:'HH:mm' }}
                 </button>
               }
-            </div>
-          } @else {
-            <p>No hay días disponibles.</p>
-          }
-          
-          <div class="stepper-actions">
-            <button mat-button matStepperPrevious>Anterior</button>
-            <button
-              mat-button
-              matStepperNext
-              [disabled]="!reunion().dia"
-            >
-              Siguiente
-            </button>
-          </div>
-        </mat-step>
-        <mat-step label="Hora">
-          @if (listaHorarios().length > 0) {
-            <div class="horarios-list">
-              <mat-divider>Mañana</mat-divider>Por la mañana
-              @for (hora of listaHorarios(); track hora) {
-                @if (hora.getHours() < 12) {
-                  <button
-                    class="hora-btn"
-                    (click)="actualizarReunion('hora', hora.toTimeString().slice(0,5))"
-                    [class.selected]="hora.toTimeString().slice(0,5) === reunion().hora"
-                  >
-                    {{ hora | date: 'HH:mm' }}
-                  </button>
-                }
-              }
+            }
 
-              <mat-divider>Tarde</mat-divider>Por la tarde
-              @for (hora of listaHorarios(); track hora) {
-                @if (hora.getHours() >= 12) {
-                  <button
-                    class="hora-btn"
-                    (click)="actualizarReunion('hora', hora.toTimeString().slice(0,5))"
-                    [class.selected]="hora.toTimeString().slice(0,5) === reunion().hora"
-                  >
-                    {{ hora | date: 'HH:mm' }}
-                  </button>
-                }
+            <mat-divider>Tarde</mat-divider>
+            @for (hora of listaHorarios(); track hora) {
+              @if (hora.getHours() >= 12) {
+                <button
+                  class="hora-btn"
+                  (click)="actualizarReunion('hora', hora.toTimeString().slice(0,5))"
+                  [class.selected]="hora.toTimeString().slice(0,5) === reunion().hora"
+                >
+                  {{ hora | date:'HH:mm' }}
+                </button>
               }
-            </div>
+            }
+
+          </div>
           } @else {
             <p>No hay horarios disponibles para este día.</p>
           }
 
           <div class="stepper-actions">
             <button mat-button matStepperPrevious>Anterior</button>
-            <button mat-button matStepperNext>Siguiente</button>
+            <button mat-button matStepperNext (click)="modificarStepper()">Siguiente</button>
           </div>
         </mat-step>
-      </mat-vertical-stepper>
-    </div>
 
-    <div class="d-grid mt-3">
+          </mat-vertical-stepper>
+        </div>
+      } @else{
+      <p>¡Turno seleccionado!</p>
+      <button class="Btn" (click)="modificarStepper()">Modificar turno</button>
+      }
+    } 
+  }   @else {
+    <app-turno-input
+      [fecha]="fechaTurno()"
+      (fechaCambio)="actualizarTurno($event)"
+    ></app-turno-input>
+      
+  }
+  <div class="d-grid mt-3">
       <button type="submit" (click)="confirmar()" class="Btn">Confirmar turno</button>
     </div>
-  }
   </form>
 </div>

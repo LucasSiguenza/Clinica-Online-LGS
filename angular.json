@@ -48,7 +48,8 @@
                 "glob": "_redirects",
                 "input": "public",
                 "output": "."
-              }
+              },
+              "src/assets"
             ],
 
             "styles": [

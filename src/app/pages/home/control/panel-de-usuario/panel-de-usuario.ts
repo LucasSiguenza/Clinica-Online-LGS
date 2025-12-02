@@ -6,10 +6,12 @@ import { Usuario } from '../../../../models/Usuario';
 import { Header } from "../../../../components/header/header";
 import { FormularioAltaUsuario } from '../../../../components/formulario-alta-usuario/formulario-alta-usuario';
 import { Utils } from '../../../../services/util';
+import { BotonPersonalizado } from "../../../../components/elementos/boton-personalizado/boton-personalizado";
+import { GenExcelUsuariosDirective } from '../../../../directivas/gen-excel-usuarios';
 
 @Component({
   selector: 'app-panel-de-usuario',
-  imports: [CardUsuario, Header],
+  imports: [CardUsuario, Header, BotonPersonalizado, GenExcelUsuariosDirective],
   templateUrl: './panel-de-usuario.html',
   styleUrl: './panel-de-usuario.scss'
 })

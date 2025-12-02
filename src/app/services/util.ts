@@ -25,7 +25,7 @@ export class Utils {
 
   //! ================== Alert ==================
 
-  mostrarAlert(opts: SweetAlertOptions){
+  mostrarAlert(opts: SweetAlertOptions={theme: 'dark', animation: true}){
     return Swal.fire(opts);
   }
 
@@ -158,6 +158,13 @@ mostrarToast(
     return blob;
   }
   //! ================== Formateo de strings ==================
+    normalizarAMinutos(d: Date) {
+      const nd = new Date(d);
+      nd.setSeconds(0, 0);
+      return nd;
+    }
+
+
   formatoSB(valor: string): string {
     return valor
       .trim()
@@ -193,6 +200,10 @@ mostrarToast(
   redirigir(url: string) {
     this.router.navigateByUrl(url);
   }
+
+  crearUrlTree(ruta: string) {
+  return this.router.createUrlTree([ruta]);
+}
 
 
 }

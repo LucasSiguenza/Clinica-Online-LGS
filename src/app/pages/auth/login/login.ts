@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { Utils } from '../../../services/util';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthSupabase } from '../../../services/auth-supabase';
 import { InputPersonalizado } from "../../../components/elementos/input-personalizado/input-personalizado";
 import { BotonPersonalizado } from "../../../components/elementos/boton-personalizado/boton-personalizado";
+
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,14 @@ import { BotonPersonalizado } from "../../../components/elementos/boton-personal
 export class Login {
   private utilSvc = inject(Utils);
   private authSvc = inject(AuthSupabase);
-   
+  
+  //! ================= ANIMACIONES =================
+  private render = inject(ElementRef)
+
+  async ngAfterRender(){
+  }
+
+
   ingresoForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email, Validators.nullValidator]),
     constrasenia:  new FormControl('', [Validators.required, Validators.minLength(6),Validators.nullValidator])
@@ -32,8 +40,8 @@ export class Login {
     try{
       this.utilSvc.mostrarLoading();
       await this.authSvc.iniciarSesion(correo as string, contrasenia as string);
-      this.utilSvc.mostrarToast('Ingreso exitoso', 'success','center')
       this.utilSvc.redirigir('/home')
+      if(this.authSvc.usuarioActual()?.estado === 'true') this.utilSvc.mostrarToast('Ingreso exitoso', 'success','center')
       this.utilSvc.ocultarLoading();
 
     }catch(e) {

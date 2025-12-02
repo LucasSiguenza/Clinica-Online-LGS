@@ -14,5 +14,6 @@ export class InputPersonalizado {
   @Input({ required: true }) control!: string;
   @Input() tipoInput: string = 'text';
   @Input() placeHolder!: string 
+  @Input() mensajeAdicional: string = '';
 
 }

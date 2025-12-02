@@ -4,6 +4,7 @@ import { env } from '../../enviroments/enviroment';
 import { Usuario } from '../models/Usuario';
 import { TurnosSupabase } from './turnos-supabase';
 import { SupabaseUtils } from './supabase-utils';
+import { Utils } from './util';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,23 @@ export class AuthSupabase{
   supabase= this.sbUtil.supabase;
   private turnos = inject(TurnosSupabase);
   usuarioActual = signal<Usuario | null>(null);
+  isPrimerIngreso = signal<boolean>(true);
   private canal?: RealtimeChannel; 
-
+  private utilSvc = inject(Utils); 
 
   //!==================== Métodos de autenticación ====================
+
+  async registrarUsuario(correo: string, contrasenia: string){
+    await this.supabase.auth.signUp({email: correo, password: contrasenia})
+  }
+
+  async iniciarSesionUsuario(correo: string, constrasenia: string){
+    await this.supabase.auth.signInWithPassword({email: correo, password: constrasenia})
+  }
+
+  async cerrarSesionUsuario(){
+    await this.supabase.auth.signOut();
+  }
 
   /**
    * Evalúa si ya existe el usuario en la bd y de no hacerlo lo registra 
@@ -25,8 +39,6 @@ export class AuthSupabase{
    */
   async registrarUsuarioAuth(usr: Usuario, contrasenia: string){
     const correo = usr.correo;
-
-    console.log("Correo: ",correo, " \nContraseña: ",contrasenia);
 
     const {data, error} = await this.supabase.auth.signUp({
       email: correo,
@@ -36,6 +48,15 @@ export class AuthSupabase{
     if(error) throw new Error('Algo salió mal al registrar. ',{cause:error.message});
     return data.user?.id;
     
+  }
+
+  async recuperarSesion(){
+    const {data, error} = await this.supabase.auth.refreshSession()
+    if(error){
+      await this.supabase.auth.signOut({scope: 'local'})
+      throw error;
+    }
+    return data.user?.id;
   }
 
   async cerrarSesion(){

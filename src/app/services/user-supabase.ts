@@ -92,7 +92,7 @@ export class UserSupabase {
     const listaEsp = await this.sbSvc.adquirirColumna('especialidades', 'nombre') as string[] 
 
     const usrAct ={
-      obra_social: usr.obra_social ,
+      obra_social: usr.obra_social,
       especialidad: this.utilSvc.formatoSB(usr.especialidad as string) ,
       estado: usr.estado , 
       nombre: usr.nombre ,
@@ -108,7 +108,52 @@ export class UserSupabase {
     .from('usuarios')
     .update(usrAct)
     .eq('uid', usr.uid)
+    .select()
     .single()
+
+    const usrDB = {id: data!.id}
+
+    if(usrAct.especialidad != 'no' && usrDB != null){
+      //^ Buscar ID de la especialidad existente
+      const { data: espExistente, error: errBuscarEsp } = await this.supabase
+        .from('especialidades')
+        .select('id')
+        .eq('nombre', usr.especialidad)
+        .single();
+
+      if (errBuscarEsp && errBuscarEsp.code !== 'PGRST116'){ //? ignora "no rows found"
+        throw new Error('Error al buscar especialidad: ', { cause: errBuscarEsp });}
+
+      let especialidadId = espExistente?.id;
+
+      //^ Si no existe, crear nueva especialidad
+      if (!especialidadId) {
+        const { data: nuevaEsp, error: errNuevaEsp } = await this.supabase
+          .from('especialidades')
+          .insert({ nombre: usr.especialidad })
+          .select('id')
+          .single();
+
+        if (errNuevaEsp)
+          throw new Error('Error al registrar nueva especialidad: ', { cause: errNuevaEsp });
+
+        especialidadId = nuevaEsp.id;
+      }
+      
+      //^ Registrar empleado con las FK correctas
+      const empleadoBD = {
+        empleado: usrDB.id,              //? id del usuario recién insertado
+        especialidad: especialidadId,  //? id de especialidad
+      };
+
+      const { error: errEmp } = await this.supabase
+        .from('empleados')
+        .insert(empleadoBD);
+
+      if (errEmp){
+        throw new Error('Error al registrar empleado: ', { cause: errEmp });}
+    }
+
 
     if(error) throw new Error('Algo salió mal:', {cause: error.message});
     if(usr.foto == null || usr.foto == undefined || usr.foto == '') return console.log('Usuario actualizado con éxito');

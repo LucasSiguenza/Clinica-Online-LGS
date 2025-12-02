@@ -11,7 +11,7 @@ export interface Usuario{
     dni: string,
     cuil: string,
     correo: string,
-    perfil: 'cliente' | 'empleado' | string,
+    perfil: 'cliente' | 'empleado' | 'admin' | string,
     foto: string[] | string,
     isEmpleado?: boolean | null
 

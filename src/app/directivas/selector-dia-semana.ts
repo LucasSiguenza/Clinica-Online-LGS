@@ -5,42 +5,43 @@ import { computed, Directive, effect, input, output, signal } from '@angular/cor
 })
 export class SelectorDiaSemana {
 
-  mes = input.required<number>();
-  anio = input.required<number>();
+  
+  private hoy = new Date();
 
   diaSeleccionado = signal<number | null>(null);
 
-  readonly fechas = computed( () => {
-    const mes = this.mes();
-    const anio = this.anio();
-    const dia = this.diaSeleccionado()
+  //^ Computed que genera las fechas del día elegido en los próximos 15 días
+  readonly fechas = computed(() => {
+    const dia = this.diaSeleccionado();
+    if (dia === null) return [];
 
-    if(dia === null) return [];
+    const fechas: Date[] = [];
+    const inicio = new Date(this.hoy);
+    const fin = new Date(this.hoy);
+    fin.setDate(fin.getDate() + 15);
 
-    const fechas: Date[] = []
-    const fecha = new Date(anio, mes-1, 1);
+    const cursor = new Date(inicio);
 
-    while(fecha.getMonth() === mes -1){
-      if(fecha.getDay() === dia) fechas.push(new Date(fecha));
-      fecha.setDate(fecha.getDate() + 1)
+    while (cursor <= fin) {
+      if (cursor.getDay() === dia) {
+        fechas.push(new Date(cursor));
+      }
+      cursor.setDate(cursor.getDate() + 1);
     }
 
     return fechas;
-
   });
 
-  //? Variable que almacena la emisión de fechas ante los cambios de día
   cambios = output<Date[]>();
 
-  constructor(){
-    effect( () => {
-      const dias = this.fechas();
-      if(dias.length > 0) this.cambios.emit(dias);
-     })
+  constructor() {
+    effect(() => {
+      const lista = this.fechas();
+      if (lista.length) this.cambios.emit(lista);
+    });
   }
 
-  seleccionarDia(dia: number){
-    console.log(dia, this.mes, this.anio)
+  seleccionarDia(dia: number) {
     this.diaSeleccionado.set(dia);
   }
 }

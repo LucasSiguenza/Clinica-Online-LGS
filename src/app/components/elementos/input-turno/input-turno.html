@@ -1,0 +1,52 @@
+<div class="turno-wrapper">
+  <div class="turno-form">
+
+    <!-- FECHA -->
+    <div class="input-group">
+      <label class="mes-valor">
+        {{ diaSemana() | titlecase }} {{ dia() ?? 'Ingrese día' }} de {{ mes()  ?? 'Ingrese mes' | mesPipe }}
+      </label>
+
+      <input
+        class="input"
+        type="number"
+        placeholder="Día"
+        min="1"
+        max="31"
+        [value]="dia()"
+        (input)="cambiarDia($event)"
+      />
+
+      <input
+        class="input"
+        type="number"
+        placeholder="Mes"
+        min="1"
+        max="12"
+        [value]="mes()"
+        (input)="cambiarMes($event)"
+      />
+    </div>
+
+    <!-- HORA -->
+    <div>
+      <label class="mes-valor">A las {{ hora() }}</label>
+
+      <mat-form-field appearance="fill" class="input">
+       <input
+        matInput
+        readonly
+        [ngModel]="hora()"
+        [matTimepicker]="picker"
+      />
+
+      <mat-timepicker
+        #picker
+        interval="15"
+        (timeChange)="onTimeChange($event)"
+      />
+      </mat-form-field>
+    </div>
+
+  </div>
+</div>
